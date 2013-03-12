@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ExcelEntityMapper.Impl.XLPropertyMapper&lt;TSource&gt;" Collapsed="true">
+    <Position X="13.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAEAAAAAAEgAAAQAAAAAAgAIAAAAAIAAgCAAA=</HashCode>
+      <FileName>Impl\XLPropertyMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExcelEntityMapper.Impl.XLSheet" Collapsed="true">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIAhAAAAEAAIAAAAEAAIAAAQAAAAAgAAAgAA=</HashCode>
+      <FileName>Impl\XLSheet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExcelEntityMapper.SourceHelper" Collapsed="true">
+    <Position X="11" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAICAAAAAAAA=</HashCode>
+      <FileName>SourceHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExcelEntityMapper.Impl.XSheetMapper&lt;TSource&gt;">
+    <Position X="8" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAUAAAAAAAAAAAAAYAQAAAAAAABAAgAAAgAAAQAAA=</HashCode>
+      <FileName>Impl\XSheetMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExcelEntityMapper.Impl.XSheetFilteredMapper&lt;TSource&gt;">
+    <Position X="8" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAQAAAA=</HashCode>
+      <FileName>Impl\XSheetFilteredMapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExcelEntityMapper.Impl.XWorkBook" Collapsed="true">
+    <Position X="13.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABIAAAACBAAAgAAAAAABAAAAAAAAIAAAgACAAAAA=</HashCode>
+      <FileName>Impl\XWorkBook.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ExcelEntityMapper.Impl.XSheetBase">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Impl\XSheetBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ExcelEntityMapper.IXLSheet">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIAAAAAAAAAAAAAAEAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IXLSheet.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLSheetFiltered&lt;TSource&gt;">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>IXLSheetFiltered.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLSheetReader&lt;TSource&gt;">
+    <Position X="0.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IXLSheetReader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLSheetWorker&lt;TSource&gt;">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IXLSheetWorker.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLSheetWriter&lt;TSource&gt;">
+    <Position X="4.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>IXLSheetWriter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLPropertyMapper&lt;TSource&gt;" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAQAAAAAAgAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>IXLPropertyMapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
