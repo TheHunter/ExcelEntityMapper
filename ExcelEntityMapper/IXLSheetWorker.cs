@@ -11,12 +11,14 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public interface IXLSheetWorker<TSource>
-        : IXLSheet ,IXLSheetReader<TSource>, IXLSheetWriter<TSource>
-        where TSource : class
+        : IXLSheetMapper<TSource>, IXLSheetReader<TSource>, IXLSheetWriter<TSource>
+        where TSource : class, new()
     {
+
         /// <summary>
-        /// A set of customizing mappers for this WorksheetWorker.
+        /// 
         /// </summary>
-        IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers { get; }
+        /// <param name="workbook"></param>
+        void InjectWorkBook(IXLWorkBook workbook);
     }
 }

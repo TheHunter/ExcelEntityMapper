@@ -6,7 +6,7 @@ using System.Text;
 namespace ExcelEntityMapper
 {
     /// <summary>
-    /// Definaes a set of properties for customizing property mappers.
+    /// Defines a set of properties for customizing property mappers.
     /// </summary>
     /// <typeparam name="TSource">Type of instance which property mapper is used.</typeparam>
     public interface IXLPropertyMapper<TSource>

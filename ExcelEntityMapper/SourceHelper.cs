@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Linq.Expressions;
-using SmartXLS;
+using ExcelEntityMapper.Exceptions;
+using ExcelEntityMapper.Impl.BIFF;
 using ExcelEntityMapper.Impl;
 
 namespace ExcelEntityMapper
@@ -38,7 +39,7 @@ namespace ExcelEntityMapper
         /// </summary>
         /// <param name="expr"></param>
         /// <returns></returns>
-        internal static KeyValuePair<string, Type> GetMemberInfo(System.Linq.Expressions.Expression expr)
+        internal static KeyValuePair<string, Type> GetMemberInfo(Expression expr)
         {
             string name = null;
             Type type = null;
@@ -54,13 +55,13 @@ namespace ExcelEntityMapper
                     MemberExpression memberExpr = (MemberExpression)expr;
                     switch (memberExpr.Member.MemberType)
                     {
-                        case System.Reflection.MemberTypes.Property:
+                        case MemberTypes.Property:
                             {
                                 PropertyInfo info = (PropertyInfo)memberExpr.Member;
                                 type = info.PropertyType;
                                 break;
                             }
-                        case System.Reflection.MemberTypes.Field:
+                        case MemberTypes.Field:
                             {
                                 FieldInfo info = (FieldInfo)memberExpr.Member;
                                 type = info.FieldType;
@@ -103,35 +104,7 @@ namespace ExcelEntityMapper
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="workbook"></param>
-        /// <param name="sheetName"></param>
-        /// <returns></returns>
-        internal static WorkBook VerifyWorkBook(IXLWorkBook workbook, string sheetName)
-        {
-            if (string.IsNullOrEmpty(sheetName))
-                throw new ArgumentException("It's impossible to read/write a sheet if the sheetname is not set.");
-
-            if (workbook == null)
-                throw new NotImplementedException("no workbook was referenced.");
-
-            XWorkBook wb = workbook as XWorkBook;
-
-            if (wb == null)
-                throw new InvalidCastException("workbook type is not valid.");
-
-            int index = wb.Workbook.findSheetByName(sheetName);
-
-            if (index == -1)
-            {
-                throw new ArgumentException("There's no sheet with the name specified in argument.");
-            }
-
-            wb.Workbook.Sheet = index;
-            return wb.Workbook;
-        }
+        
 
     }
 }

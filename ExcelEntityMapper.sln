@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelEntityMapper", "ExcelEntityMapper\ExcelEntityMapper.csproj", "{7C981E99-DC4E-45D0-AA18-EDB0A18C3B20}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{88B9E010-8C48-481E-BE63-78985CD0815D}"
@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{88B9E0
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExcelEntityMapper", "TestExcelEntityMapper\TestExcelEntityMapper.csproj", "{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelEntityMapperTest", "TestExcelEntityMapper\ExcelEntityMapperTest.csproj", "{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

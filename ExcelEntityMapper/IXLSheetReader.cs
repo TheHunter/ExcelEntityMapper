@@ -15,18 +15,16 @@ namespace ExcelEntityMapper
         /// <summary>
         /// Reads all worksheet rows and transforms into objects.
         /// </summary>
-        /// <param name="workbook">A workbook which has loaded the excel file.</param>
         /// <param name="buffer">A buffer which will be contain all intances read from worksheet.</param>
         /// <returns>Returns the row number read from the current worksheet.</returns>
-        int ReadObjects(IXLWorkBook workbook, IDictionary<int, TSource> buffer);
+        int ReadObjects(IDictionary<int, TSource> buffer);
 
         /// <summary>
         /// Reads all worksheet rows and transforms into objects.
         /// </summary>
-        /// <param name="workbook">A workbook which has loaded the excel file.</param>
         /// <param name="sheetName">The sheetname to read from the current workbook.</param>
         /// <param name="buffer">A buffer which will be contain all intances read from worksheet.</param>
         /// <returns>Returns the row number read from the current worksheet.</returns>
-        int ReadObjects(IXLWorkBook workbook, string sheetName, IDictionary<int, TSource> buffer);
+        int ReadObjects(string sheetName, IDictionary<int, TSource> buffer);
     }
 }

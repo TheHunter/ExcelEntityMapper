@@ -35,8 +35,17 @@
     <DocumentationFile>bin\Release\ExcelEntityMapper.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SX">
-      <HintPath>..\packages\SmartExcel.2.3.8.2\lib\net35\SX.dll</HintPath>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\ClosedXML.0.68.1\lib\net35-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelLibrary">
+      <HintPath>..\packages\ExcelLibrary.1.2011.7.30\lib\ExcelLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI.1.2.5\lib\net20\NPOI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,11 +56,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelFormat.cs" />
-    <Compile Include="Impl\XLSheet.cs" />
-    <Compile Include="Impl\XLPropertyMapper.cs" />
-    <Compile Include="Impl\XSheetBase.cs" />
-    <Compile Include="Impl\XSheetFilteredMapper.cs" />
-    <Compile Include="Impl\XSheetMapper.cs" />
+    <Compile Include="Exceptions\NotAvailableWorkSheetException.cs" />
+    <Compile Include="Exceptions\WorkBookException.cs" />
+    <Compile Include="Exceptions\SheetParameterException.cs" />
+    <Compile Include="Exceptions\UnReadableSheetException.cs" />
+    <Compile Include="Exceptions\UnReadableWorkbookException.cs" />
+    <Compile Include="Exceptions\UnWriteableSheetException.cs" />
+    <Compile Include="Impl\SheetBase.cs" />
+    <Compile Include="Impl\PropertyMapper.cs" />
+    <Compile Include="Impl\SheetMapper.cs" />
+    <Compile Include="Impl\Xml\XLSheetFilteredMapper.cs" />
+    <Compile Include="Impl\Xml\XLSheetMapper.cs" />
+    <Compile Include="Impl\Xml\XLWorkBook.cs" />
+    <Compile Include="Impl\BIFF\XSheetFilteredMapper.cs" />
+    <Compile Include="Impl\BIFF\XSheetMapper.cs" />
+    <Compile Include="IXLSheetMapper.cs" />
     <Compile Include="IXLPropertyMapper.cs" />
     <Compile Include="IXLSheet.cs" />
     <Compile Include="IXLSheetFiltered.cs" />
@@ -61,7 +80,7 @@
     <Compile Include="IXLWorkBook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceHelper.cs" />
-    <Compile Include="Impl\XWorkBook.cs" />
+    <Compile Include="Impl\BIFF\XWorkBook.cs" />
     <Compile Include="XLEntityHelper.cs" />
   </ItemGroup>
   <ItemGroup />

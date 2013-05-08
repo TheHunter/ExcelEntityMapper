@@ -11,8 +11,8 @@ namespace ExcelEntityMapper
     /// </summary>
     public static class XLEntityHelper
     {
-        private static string[] DateFormats = { "dd/MM/yyyy", "dd/MM/yyyy hh:mm:ss" };
-        private static HashSet<Type> DateTypes = new HashSet<Type>();
+        private static readonly string[] DateFormats = { "dd/MM/yyyy", "dd/MM/yyyy hh:mm:ss" };
+        private static readonly HashSet<Type> DateTypes = new HashSet<Type>();
 
         /// <summary>
         /// 
@@ -44,23 +44,16 @@ namespace ExcelEntityMapper
             DateTime result;
 
             if (formats == null)
-            {
                 throw new NullReferenceException("Formats cannot be null");
-            }
-            else if (formats.Length == 0)
-            {
+
+            if (formats.Length == 0)
                 formats = DateFormats;
-            }
 
             bool esito = DateTime.TryParseExact(value, formats, DateTimeFormatInfo.CurrentInfo, DateTimeStyles.AssumeLocal, out result);
             if (esito)
-            {
                 return result;
-            }
-            else
-            {
-                return (DateTime?)null;
-            }
+
+            return (DateTime?)null;
         }
 
         /// <summary>
@@ -113,11 +106,7 @@ namespace ExcelEntityMapper
         /// <returns>return null if the argument contains only empty chars or It is null.</returns>
         public static string ToExcelFormat(object obj)
         {
-            if (obj != null)
-            {
-                return obj.ToString();
-            }
-            return null;
+            return obj != null ? obj.ToString() : null;
         }
 
         /// <summary>
@@ -127,14 +116,7 @@ namespace ExcelEntityMapper
         /// <returns></returns>
         public static string ToExcelFormat(DateTime? data)
         {
-            if (data.HasValue)
-            {
-                return data.Value.ToShortDateString();
-            }
-            else
-            {
-                return null;
-            }
+            return data.HasValue ? data.Value.ToShortDateString() : null;
         }
 
         /// <summary>
@@ -149,9 +131,7 @@ namespace ExcelEntityMapper
             if (data.HasValue)
             {
                 if (string.IsNullOrEmpty(format) && provider == null)
-                {
                     throw new ArgumentException("format provider or format argument must be not null.");
-                }
 
                 bool isEmpty = string.IsNullOrEmpty(format);
                 bool providerNull = provider == null;
@@ -169,10 +149,7 @@ namespace ExcelEntityMapper
                     return data.Value.ToString(provider);
                 }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

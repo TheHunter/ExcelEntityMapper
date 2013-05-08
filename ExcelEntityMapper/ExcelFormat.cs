@@ -13,10 +13,10 @@ namespace ExcelEntityMapper
         /// <summary>
         /// An old workbook format.
         /// </summary>
-        Xls,
+        BIFF,
         /// <summary>
         /// A new workbook format.
         /// </summary>
-        Xlsx
+        XML
     }
 }

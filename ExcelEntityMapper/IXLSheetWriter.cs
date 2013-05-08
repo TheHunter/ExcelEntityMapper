@@ -15,18 +15,16 @@ namespace ExcelEntityMapper
         /// <summary>
         /// Writes all objects into current worksheet rows.
         /// </summary>
-        /// <param name="workbook">A workbook which has loaded the excel file.</param>
         /// <param name="instances">Objects which be written into current worksheet rows.</param>
         /// <returns>A number of objects written into the current worksheet.</returns>
-        int WriteObjects(IXLWorkBook workbook, IEnumerable<TSource> instances);
+        int WriteObjects(IEnumerable<TSource> instances);
 
         /// <summary>
         /// Writes all objects into current worksheet rows.
         /// </summary>
-        /// <param name="workbook">A workbook which has loaded the excel file.</param>
         /// <param name="sheetName">The sheetname to find for writing the current instances into workbook.</param>
         /// <param name="instances">Objects which be written into current worksheet rows.</param>
         /// <returns>A number of objects written into the current worksheet.</returns>
-        int WriteObjects(IXLWorkBook workbook, string sheetName, IEnumerable<TSource> instances);
+        int WriteObjects(string sheetName, IEnumerable<TSource> instances);
     }
 }

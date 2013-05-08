@@ -35,12 +35,12 @@ namespace ExcelEntityMapper
         /// </summary>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        bool RemoveSheet(string sheetName); 
+        bool RemoveSheet(string sheetName);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        Stream Save(ExcelFormat format);
+        Stream Save();
     }
 }
