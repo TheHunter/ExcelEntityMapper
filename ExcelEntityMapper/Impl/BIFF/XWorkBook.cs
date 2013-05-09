@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExcelEntityMapper.Exceptions;
-using ExcelLibrary;
 using System.IO;
 using System.Linq;
-using ExcelLibrary.SpreadSheet;
 using NPOI.HSSF.UserModel;
 
 namespace ExcelEntityMapper.Impl.BIFF

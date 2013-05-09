@@ -6,7 +6,6 @@ using System.Text;
 using ExcelEntityMapper;
 using ExcelEntityMapper.Impl.BIFF;
 using ExcelEntityMapper.Impl.Xml;
-using ExcelLibrary.SpreadSheet;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NUnit.Framework;

@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExcelEntityMapper.net40</RootNamespace>
+    <AssemblyName>ExcelEntityMapper.net40</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\ClosedXML.0.68.1\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\NPOI.1.2.5\lib\net40\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI.1.2.5\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ExcelEntityMapper\ExcelFormat.cs">
+      <Link>ExcelFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\NotAvailableWorkSheetException.cs">
+      <Link>Exceptions\NotAvailableWorkSheetException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\SheetParameterException.cs">
+      <Link>Exceptions\SheetParameterException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\UnReadableSheetException.cs">
+      <Link>Exceptions\UnReadableSheetException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\UnReadableWorkbookException.cs">
+      <Link>Exceptions\UnReadableWorkbookException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\UnWriteableSheetException.cs">
+      <Link>Exceptions\UnWriteableSheetException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\WorkBookException.cs">
+      <Link>Exceptions\WorkBookException.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetFilteredMapper.cs">
+      <Link>Impl\BIFF\XSheetFilteredMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetMapper.cs">
+      <Link>Impl\BIFF\XSheetMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XWorkBook.cs">
+      <Link>Impl\BIFF\XWorkBook.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\PropertyMapper.cs">
+      <Link>Impl\PropertyMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\SheetBase.cs">
+      <Link>Impl\SheetBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\SheetMapper.cs">
+      <Link>Impl\SheetMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetFilteredMapper.cs">
+      <Link>Impl\Xml\XLSheetFilteredMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetMapper.cs">
+      <Link>Impl\Xml\XLSheetMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLWorkBook.cs">
+      <Link>Impl\Xml\XLWorkBook.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLPropertyMapper.cs">
+      <Link>IXLPropertyMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheet.cs">
+      <Link>IXLSheet.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheetFiltered.cs">
+      <Link>IXLSheetFiltered.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheetMapper.cs">
+      <Link>IXLSheetMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheetReader.cs">
+      <Link>IXLSheetReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheetWorker.cs">
+      <Link>IXLSheetWorker.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLSheetWriter.cs">
+      <Link>IXLSheetWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLWorkBook.cs">
+      <Link>IXLWorkBook.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\SourceHelper.cs">
+      <Link>SourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\XLEntityHelper.cs">
+      <Link>XLEntityHelper.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

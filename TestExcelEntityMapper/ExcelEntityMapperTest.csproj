@@ -59,9 +59,6 @@
     <Reference Include="DocumentFormat.OpenXml">
       <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="ExcelLibrary">
-      <HintPath>..\packages\ExcelLibrary.1.2011.7.30\lib\ExcelLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\NPOI.1.2.5\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>

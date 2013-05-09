@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{88B9E0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelEntityMapperTest", "TestExcelEntityMapper\ExcelEntityMapperTest.csproj", "{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelEntityMapper.net40", "ExcelEntityMapper.net40\ExcelEntityMapper.net40.csproj", "{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,16 @@ Global
 		{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}.Release|x86.ActiveCfg = Release|x86
 		{AC0E2CE0-CFFE-4908-98E6-02D40BA23C3F}.Release|x86.Build.0 = Release|x86
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
