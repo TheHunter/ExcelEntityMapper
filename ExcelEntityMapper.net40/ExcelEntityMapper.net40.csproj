@@ -7,8 +7,8 @@
     <ProjectGuid>{6C5F07DD-F6DB-4325-8E8F-2737ECA17ADF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExcelEntityMapper.net40</RootNamespace>
-    <AssemblyName>ExcelEntityMapper.net40</AssemblyName>
+    <RootNamespace>ExcelEntityMapper</RootNamespace>
+    <AssemblyName>ExcelEntityMapper</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ExcelEntityMapper.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML">
