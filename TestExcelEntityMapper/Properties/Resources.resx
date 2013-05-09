@@ -118,10 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="output_XLSX_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Risorse\output_XLSX_.xlsx;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="empty_XLS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\risorse\empty_xls.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="output_XLS_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Risorse\output_XLS_.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="empty_XLSX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\risorse\empty_xlsx.xlsx;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="input_XLSX_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\risorse\input_xlsx_.xlsx;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="input_XLS_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\risorse\input_xls_.xls;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

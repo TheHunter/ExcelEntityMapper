@@ -22,6 +22,7 @@ namespace ExcelEntityMapperTest
         : SheetFilteredTest
     {
         private byte[] resource;
+        private byte[] emptyResource;
 
         /// <summary>
         /// 
@@ -29,7 +30,8 @@ namespace ExcelEntityMapperTest
         public override void OnStartUp()
         {
             base.OnStartUp();
-            this.resource = Properties.Resources.output_XLS_;
+            this.resource = Properties.Resources.input_XLS_;
+            this.emptyResource = Properties.Resources.empty_XLS;
         }
 
         [Test]
@@ -48,6 +50,42 @@ namespace ExcelEntityMapperTest
             sheet.ReadObjects(buffer);
 
             Assert.IsTrue(buffer.Any());
+        }
+
+        [Test]
+        [Category("ReaderXLS")]
+        [Description("Reading a empty workbook without header.")]
+        public void ReadObjectsTest2()
+        {
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, false, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons2";
+
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+
+            sheet.InjectWorkBook(workbook);
+
+            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
+            var counter = sheet.ReadObjects(buffer);
+
+            Assert.IsTrue(!buffer.Any() && counter == 0);
+        }
+
+        [Test]
+        [Category("ReaderXLS")]
+        [Description("Reading a empty workbook with header.")]
+        public void ReadObjectsTest3()
+        {
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, true, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons";
+
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+
+            sheet.InjectWorkBook(workbook);
+
+            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
+            var counter = sheet.ReadObjects(buffer);
+
+            Assert.IsTrue(!buffer.Any() && counter == 0);
         }
 
         [Test]
@@ -88,7 +126,8 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_noHeader.xls"), workbook.Save());
         }
 
-        [Test]
+
+        //[Test]
         [Category("Demo")]
         public void Test1()
         {
@@ -98,7 +137,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_test.xls"), workbook.Save());
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test2()
         {
@@ -134,7 +173,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_out2_.xls"), mem);
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test3()
         {
@@ -179,7 +218,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_out3_.xls"), mem);
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test4()
         {

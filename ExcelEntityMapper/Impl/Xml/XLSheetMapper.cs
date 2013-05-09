@@ -106,15 +106,15 @@ namespace ExcelEntityMapper.Impl.Xml
                 throw new UnReadableSheetException("The current workbook to use cannot be null.");
 
             IXLWorksheet workSheet = this.GetWorkSheet(sheetName);
+            IXLRow row = this.GetFirstRow(workSheet);
 
-            IXLRow row = workSheet.FirstRowUsed();
-            int counter = 0;
+            if (row == null)
+                return 0;
 
             if (this.HasHeader)
-            {
                 row = row.RowBelow();
-            }
 
+            int counter = 0;
             while (!row.Cell(this.IndexKeyColumn).IsEmpty())
             {
                 counter++;
@@ -267,5 +267,30 @@ namespace ExcelEntityMapper.Impl.Xml
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workSheet"></param>
+        /// <returns></returns>
+        private IXLRow GetFirstRow(IXLWorksheet workSheet)
+        {
+            IXLCell current = workSheet.Column(this.IndexKeyColumn).FirstCellUsed();
+            if (current != null)
+                return current.WorksheetRow();
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workSheet"></param>
+        /// <returns></returns>
+        private IXLRow GetLastRow(IXLWorksheet workSheet)
+        {
+            IXLCell current = workSheet.Column(this.IndexKeyColumn).LastCellUsed();
+            if (current != null)
+                return current.WorksheetRow();
+            return null;
+        }
     }
 }

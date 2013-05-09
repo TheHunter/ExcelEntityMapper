@@ -43,6 +43,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// 
         /// </summary>
         /// <param name="rowBase"></param>
+        /// <param name="sheet"></param>
         protected void WriteHeader(int rowBase, ISheet sheet)
         {
             int index = rowBase;

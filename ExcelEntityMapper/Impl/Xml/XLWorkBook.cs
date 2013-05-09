@@ -89,7 +89,12 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public bool AddSheet(string sheetName)
         {
-            return this.workbook.AddWorksheet(sheetName) != null;
+            if (!this.ExistsWorkSheet(sheetName))
+            {
+                this.workbook.AddWorksheet(sheetName);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

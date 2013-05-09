@@ -19,6 +19,7 @@ namespace ExcelEntityMapperTest
         : SheetFilteredTest
     {
         private byte[] resourceXml;
+        private byte[] emptyResourceXml;
 
         /// <summary>
         /// 
@@ -26,7 +27,8 @@ namespace ExcelEntityMapperTest
         public override void OnStartUp()
         {
             base.OnStartUp();
-            this.resourceXml = Properties.Resources.output_XLSX_;
+            this.resourceXml = Properties.Resources.input_XLSX_;
+            this.emptyResourceXml = Properties.Resources.empty_XLSX;
         }
 
         [Test]
@@ -49,12 +51,31 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("ReaderXLSX")]
+        [Description("Reading a empty workbook without header.")]
         public void ReadObjectsTest2()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, false, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons2";
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+
+            sheet.InjectWorkBook(workbook);
+
+            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
+            var count = sheet.ReadObjects(buffer); 
+
+            Assert.IsTrue(!buffer.Any() && count == 0);
+        }
+
+        [Test]
+        [Category("ReaderXLSX")]
+        [Description("Reading a empty workbook with header.")]
+        public void ReadObjectsTest3()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, true, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
 
-            IXLWorkBook workbook = new XLWorkBook();
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
             workbook.AddSheet(sheet.SheetName);
 
             sheet.InjectWorkBook(workbook);
@@ -62,7 +83,7 @@ namespace ExcelEntityMapperTest
             Dictionary<int, Person> buffer = new Dictionary<int, Person>();
             var count = sheet.ReadObjects(buffer);      // nullreference exception..
 
-            Assert.IsTrue(buffer.Any() && count == 0);
+            Assert.IsTrue(!buffer.Any() && count == 0);
         }
 
         [Test]

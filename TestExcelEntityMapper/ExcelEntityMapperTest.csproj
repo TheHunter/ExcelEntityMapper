@@ -93,8 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Risorse\output_XLSX_.xlsx" />
-    <None Include="Risorse\output_XLS_.xls" />
+    <None Include="Risorse\empty_XLS.xls" />
+    <None Include="Risorse\empty_XLSX.xlsx" />
+    <None Include="Risorse\input_XLSX_.xlsx" />
+    <None Include="Risorse\input_XLS_.xls" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

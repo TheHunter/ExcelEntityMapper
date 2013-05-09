@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ExcelEntityMapper.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UnReadableWorkbookException
         :WorkBookException
     {

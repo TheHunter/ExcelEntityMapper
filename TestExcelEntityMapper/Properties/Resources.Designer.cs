@@ -63,9 +63,9 @@ namespace ExcelEntityMapperTest.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] output_XLS_ {
+        internal static byte[] empty_XLS {
             get {
-                object obj = ResourceManager.GetObject("output_XLS_", resourceCulture);
+                object obj = ResourceManager.GetObject("empty_XLS", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace ExcelEntityMapperTest.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] output_XLSX_ {
+        internal static byte[] empty_XLSX {
             get {
-                object obj = ResourceManager.GetObject("output_XLSX_", resourceCulture);
+                object obj = ResourceManager.GetObject("empty_XLSX", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] input_XLS_ {
+            get {
+                object obj = ResourceManager.GetObject("input_XLS_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] input_XLSX_ {
+            get {
+                object obj = ResourceManager.GetObject("input_XLSX_", resourceCulture);
                 return ((byte[])(obj));
             }
         }
