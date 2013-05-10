@@ -20,7 +20,12 @@ namespace ExcelEntityMapper
         Action<TSource> BeforeMapping { get; }
 
         /// <summary>
-        /// 
+        /// Executes the indicated action after mapping column values into current computed instance.
+        /// </summary>
+        Action<TSource> AfterMapping { get; }
+
+        /// <summary>
+        /// A collection which contains custom instances for mapping properties with sheet columns.
         /// </summary>
         IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers { get; }
     }

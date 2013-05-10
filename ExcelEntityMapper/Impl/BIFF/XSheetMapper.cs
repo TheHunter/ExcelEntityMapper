@@ -143,14 +143,13 @@ namespace ExcelEntityMapper.Impl.BIFF
                 if (this.BeforeMapping != null)
                     this.BeforeMapping.Invoke(instance);
 
-                ICell cell;
                 this.PropertyMappers.All
                     (
                         parameter =>
                         {
                             try
                             {
-                                cell = row.GetCell(parameter.ColumnIndex - this.Offset);
+                                ICell cell = row.GetCell(parameter.ColumnIndex - this.Offset);
                                 if (cell != null)
                                 {
                                     parameter.ToPropertyFormat(instance, cell.StringCellValue);
