@@ -16,6 +16,7 @@ namespace ExcelEntityMapper.Impl
     {
 
         private Action<TSource> beforeMapping;
+        private Action<TSource> afterMapping;
         private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 
         /// <summary>
@@ -38,6 +39,15 @@ namespace ExcelEntityMapper.Impl
         {
             get { return this.beforeMapping; }
             set { this.beforeMapping = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Action<TSource> AfterMapping
+        {
+            get { return this.afterMapping; }
+            set { this.afterMapping = value; }
         }
 
         /// <summary>
