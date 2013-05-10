@@ -50,7 +50,7 @@
   <Class Name="ExcelEntityMapper.Impl.Xml.XLSheetMapper&lt;TSource&gt;">
     <Position X="11" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAAQYAAIAAAAAAAAAgIAAgAQAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAAAAAQYAAIAAAAAABAAgIAAgAQAQAAA=</HashCode>
       <FileName>Impl\Xml\XLSheetMapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

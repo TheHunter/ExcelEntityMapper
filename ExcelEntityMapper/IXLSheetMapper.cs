@@ -13,6 +13,12 @@ namespace ExcelEntityMapper
         : IXLSheet
         where TSource : class, new()
     {
+
+        /// <summary>
+        /// Executes the indicated action before mapping column values into properties instances.
+        /// </summary>
+        Action<TSource> BeforeMapping { get; }
+
         /// <summary>
         /// 
         /// </summary>

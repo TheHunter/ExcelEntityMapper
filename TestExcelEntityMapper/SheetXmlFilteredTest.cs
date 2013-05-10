@@ -36,8 +36,9 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be read a xlsx file.")]
         public void ReadObjectsTest1()
         {
-            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, true, this.PropertyMappersPerson);
+            XLSheetFilteredMapper<Person> sheet = new XLSheetFilteredMapper<Person>(1, true, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
+            sheet.BeforeMapping = n => n.OwnCar = new Car();
 
             IXLWorkBook workbook = new XLWorkBook(new MemoryStream(this.resourceXml));
 

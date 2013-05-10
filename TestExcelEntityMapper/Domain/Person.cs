@@ -12,7 +12,7 @@ namespace TestExcelEntityMapper.Domain
     {
         public Person()
         {
-            this.OwnCar = new Car();
+            //this.OwnCar = new Car();
         }
 
         public string Name { get; set; }

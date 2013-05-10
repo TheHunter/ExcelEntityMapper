@@ -140,6 +140,10 @@ namespace ExcelEntityMapper.Impl.Xml
             if (row != null)
             {
                 instance = SourceHelper.CreateInstance<TSource>();
+
+                if (this.BeforeMapping != null)
+                    this.BeforeMapping.Invoke(instance);
+
                 IXLCell cell;
                 this.PropertyMappers.All
                     (

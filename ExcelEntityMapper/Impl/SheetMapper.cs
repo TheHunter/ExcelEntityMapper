@@ -14,17 +14,9 @@ namespace ExcelEntityMapper.Impl
         : SheetBase, IXLSheetMapper<TSource>
         where TSource : class, new()
     {
-        private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="indexkeyColumn"></param>
-        ///// <param name="parameters"></param>
-        //public SheetMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-        //    : this(indexkeyColumn, false, propertyMappers)
-        //{
-        //}
+        private Action<TSource> beforeMapping;
+        private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 
         /// <summary>
         /// 
@@ -37,6 +29,15 @@ namespace ExcelEntityMapper.Impl
             : base(indexkeyColumn, hasHeader, zeroBase)
         {
             this.PropertyMappers = propertyMappers;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Action<TSource> BeforeMapping
+        {
+            get { return this.beforeMapping; }
+            set { this.beforeMapping = value; }
         }
 
         /// <summary>

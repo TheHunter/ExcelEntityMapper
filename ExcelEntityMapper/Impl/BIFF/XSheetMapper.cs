@@ -139,6 +139,10 @@ namespace ExcelEntityMapper.Impl.BIFF
             if (row != null)
             {
                 instance = SourceHelper.CreateInstance<TSource>();
+
+                if (this.BeforeMapping != null)
+                    this.BeforeMapping.Invoke(instance);
+
                 ICell cell;
                 this.PropertyMappers.All
                     (
