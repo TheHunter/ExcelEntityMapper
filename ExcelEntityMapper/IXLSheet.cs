@@ -30,5 +30,9 @@ namespace ExcelEntityMapper
         /// </summary>
         bool HasHeader { get; }
 
+        /// <summary>
+        /// Indicates the numbr of rows which is composed the header.
+        /// </summary>
+        int HeaderRows { get; }
     }
 }

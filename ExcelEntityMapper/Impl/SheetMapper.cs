@@ -15,19 +15,21 @@ namespace ExcelEntityMapper.Impl
         where TSource : class, new()
     {
 
-        private Action<TSource> beforeMapping;
-        private Action<TSource> afterMapping;
+        private Action<TSource> beforeReading;
+        private Action<TSource> afterReading;
+        private Action<TSource> beforeWriting;
+        private Action<TSource> afterWriting;
         private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="indexkeyColumn"></param>
-        /// <param name="hasHeader"></param>
+        /// <param name="headerRows"></param>
         /// <param name="zeroBase"></param>
         /// <param name="propertyMappers"></param>
-        public SheetMapper(int indexkeyColumn, bool hasHeader, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, hasHeader, zeroBase)
+        public SheetMapper(int indexkeyColumn, int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(indexkeyColumn, headerRows, zeroBase)
         {
             this.PropertyMappers = propertyMappers;
         }
@@ -35,19 +37,37 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
-        public Action<TSource> BeforeMapping
+        public Action<TSource> BeforeReading
         {
-            get { return this.beforeMapping; }
-            set { this.beforeMapping = value; }
+            get { return this.beforeReading; }
+            set { this.beforeReading = value; }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public Action<TSource> AfterMapping
+        public Action<TSource> AfterReading
         {
-            get { return this.afterMapping; }
-            set { this.afterMapping = value; }
+            get { return this.afterReading; }
+            set { this.afterReading = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Action<TSource> BeforeWriting
+        {
+            get { return this.beforeWriting; }
+            set { this.beforeWriting = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Action<TSource> AfterWriting
+        {
+            get { return this.afterWriting; }
+            set { this.afterWriting = value; }
         }
 
         /// <summary>
@@ -65,5 +85,40 @@ namespace ExcelEntityMapper.Impl
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public int ReadObjects(IDictionary<int, TSource> buffer)
+        {
+            return this.ReadObjects(this.SheetName, buffer);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public abstract int ReadObjects(string sheetName, IDictionary<int, TSource> buffer);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="instances"></param>
+        /// <returns></returns>
+        public int WriteObjects(IEnumerable<TSource> instances)
+        {
+            return this.WriteObjects(this.SheetName, instances);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="instances"></param>
+        /// <returns></returns>
+        public abstract int WriteObjects(string sheetName, IEnumerable<TSource> instances);
     }
 }

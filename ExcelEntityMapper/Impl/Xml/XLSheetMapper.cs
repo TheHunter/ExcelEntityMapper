@@ -22,7 +22,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <param name="indexkeyColumn"></param>
         /// <param name="propertyMappers"></param>
         public XLSheetMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : this(indexkeyColumn, false, propertyMappers)
+            : this(indexkeyColumn, 0, propertyMappers)
         {
         }
 
@@ -30,10 +30,10 @@ namespace ExcelEntityMapper.Impl.Xml
         /// 
         /// </summary>
         /// <param name="indexkeyColumn"></param>
-        /// <param name="hasHeader"></param>
+        /// <param name="headerRows"></param>
         /// <param name="propertyMappers"></param>
-        public XLSheetMapper(int indexkeyColumn, bool hasHeader, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, hasHeader, false, propertyMappers)
+        public XLSheetMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(indexkeyColumn, headerRows, false, propertyMappers)
         {
             this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max();
         }
@@ -87,20 +87,10 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public int ReadObjects(IDictionary<int, TSource> buffer)
-        {
-            return this.ReadObjects(this.SheetName, buffer);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
+        public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
             if (this.workBook == null)
                 throw new UnReadableSheetException("The current workbook to use cannot be null.");
@@ -112,20 +102,25 @@ namespace ExcelEntityMapper.Impl.Xml
                 return 0;
 
             if (this.HasHeader)
-                row = row.RowBelow();
+                row = row.RowBelow(this.HeaderRows);
 
             int counter = 0;
-            while (!row.Cell(this.IndexKeyColumn).IsEmpty())
+            //while (!row.Cell(this.IndexKeyColumn).IsEmpty())
+            while (IsReadableRead(row))
             {
                 counter++;
-                TSource current = this.ReadInstance(row);
-                if (current != null)
+                try
                 {
-                    buffer.Add(row.RowNumber(), current);
+                    TSource current = this.ReadInstance(row);
+                    if (current != null)
+                        buffer.Add(row.RowNumber(), current);
+                    row = row.RowBelow();
                 }
-                row = row.RowBelow();
+                catch
+                {
+                    // any kind of exception cannot be blocking, so It reads the next row..
+                }
             }
-
             return counter;
         }
 
@@ -141,26 +136,28 @@ namespace ExcelEntityMapper.Impl.Xml
             {
                 instance = SourceHelper.CreateInstance<TSource>();
 
-                if (this.BeforeMapping != null)
-                    this.BeforeMapping.Invoke(instance);
+                if (this.BeforeReading != null)
+                    this.BeforeReading.Invoke(instance);
 
-                IXLCell cell;
                 this.PropertyMappers.All
                     (
                         parameter =>
+                        {
+                            try
                             {
-                                try
-                                {
-                                    cell = row.Cell(parameter.ColumnIndex);
-                                    parameter.ToPropertyFormat(instance, cell.GetString().Trim());
-                                }
-                                catch
-                                {
-                                    // nothing to do..
-                                }
-                                return true;
+                                IXLCell cell = row.Cell(parameter.ColumnIndex);
+                                parameter.ToPropertyFormat(instance, cell.GetString().Trim());
                             }
+                            catch
+                            {
+                                // nothing to do..
+                            }
+                            return true;
+                        }
                     );
+
+                if (this.AfterReading != null)
+                    this.AfterReading(instance);
             }
             return instance;
         }
@@ -168,11 +165,12 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="instances"></param>
+        /// <param name="row"></param>
         /// <returns></returns>
-        public int WriteObjects(IEnumerable<TSource> instances)
+        private bool IsReadableRead(IXLRow row)
         {
-            return this.WriteObjects(this.SheetName, instances);
+            var col = this.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
+            return col.Any() && col.All(n => !row.Cell(n.ColumnIndex).IsEmpty());
         }
 
         /// <summary>
@@ -181,7 +179,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <param name="sheetName"></param>
         /// <param name="instances"></param>
         /// <returns></returns>
-        public int WriteObjects(string sheetName, IEnumerable<TSource> instances)
+        public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
             if (this.workBook == null)
                 throw new UnWriteableSheetException("The current workbook to use cannot be null.");
@@ -191,31 +189,29 @@ namespace ExcelEntityMapper.Impl.Xml
             int counter = 0;
             if (instances != null && instances.Any())
             {
-                IXLRow row;
                 int rowIndex = 0;
-                IXLCell header = workSheet.Column(this.IndexKeyColumn).LastCellUsed();
+                //IXLCell header = workSheet.Column(this.IndexKeyColumn).LastCellUsed(); //
+                IXLRow lastRow = this.GetLastRow(workSheet);
 
                 if (this.HasHeader)
                 {
-                    if (header == null)
+                    if (lastRow == null)
                     {
                         rowIndex = 1;
                         this.WriteHeader(rowIndex, workSheet);
                     }
                     else
                     {
-                        rowIndex = header.Address.RowNumber;
+                        rowIndex = lastRow.RowNumber();
                     }
                 }
 
                 foreach (var current in instances)
                 {
                     rowIndex++;
-                    row = workSheet.Row(rowIndex);
+                    IXLRow row = workSheet.Row(rowIndex);
                     if (this.WriteInstance(row, current))
-                    {
                         counter++;
-                    }
                 }
             }
             return counter;
@@ -230,16 +226,19 @@ namespace ExcelEntityMapper.Impl.Xml
         private bool WriteInstance(IXLRow row, TSource instance)
         {
             bool ret = false;
+
+            if (this.BeforeWriting != null)
+                this.BeforeWriting(instance);
+
             if (instance != null && row != null)
             {
-                IXLCell cell = null;
                 this.PropertyMappers.All
                 (
                     parameter =>
                         {
                             try
                             {
-                                cell = row.Cell(parameter.ColumnIndex);
+                                IXLCell cell = row.Cell(parameter.ColumnIndex);
                                 cell.Value = parameter.ToExcelFormat(instance);
                             }
                             catch (Exception)
@@ -251,6 +250,10 @@ namespace ExcelEntityMapper.Impl.Xml
                     );
                 ret = true;
             }
+
+            if (this.AfterWriting != null)
+                this.AfterWriting(instance);
+
             return ret;
         }
 

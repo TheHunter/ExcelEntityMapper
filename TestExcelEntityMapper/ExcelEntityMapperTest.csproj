@@ -53,20 +53,20 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClosedXML">
+    <Reference Include="ClosedXML, Version=0.68.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ClosedXML.0.68.1\lib\net35-client\ClosedXML.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml">
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="ExcelEntityMapper, Version=2.1.1.10, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Ionic.Zip, Version=1.9.1.5, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ExcelEntityMapper.2.1.1.10\lib\net35\ExcelEntityMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip">
       <HintPath>..\packages\NPOI.1.2.5\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="NPOI">
+    <Reference Include="NPOI, Version=1.2.5.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NPOI.1.2.5\lib\net20\NPOI.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Domain\Car.cs" />
     <Compile Include="Domain\Person.cs" />
+    <Compile Include="PropertyMapperTest.cs" />
     <Compile Include="SheetBiffFilteredTest.cs" />
     <Compile Include="SheetFilteredTest.cs" />
     <Compile Include="SheetXmlFilteredTest.cs" />
@@ -124,7 +125,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Excel.png" />
+    <ProjectReference Include="..\ExcelEntityMapper\ExcelEntityMapper.csproj">
+      <Project>{7c981e99-dc4e-45d0-aa18-edb0a18c3b20}</Project>
+      <Name>ExcelEntityMapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -20,7 +20,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <param name="indexkeyColumn"></param>
         /// <param name="parameters"></param>
         public XSheetFilteredMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> parameters)
-            : this(indexkeyColumn, false, parameters)
+            : this(indexkeyColumn, 0, parameters)
         {
         }
 
@@ -28,10 +28,10 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// 
         /// </summary>
         /// <param name="indexkeyColumn"></param>
-        /// <param name="hasHeader"></param>
+        /// <param name="headerRows"></param>
         /// <param name="parameters"></param>
-        public XSheetFilteredMapper(int indexkeyColumn, bool hasHeader, IEnumerable<IXLPropertyMapper<TSource>> parameters)
-            : base(indexkeyColumn, hasHeader, parameters)
+        public XSheetFilteredMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> parameters)
+            : base(indexkeyColumn, headerRows, parameters)
         {
 
         }

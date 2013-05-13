@@ -81,6 +81,7 @@
     <Compile Include="IXLSheetWriter.cs" />
     <Compile Include="IXLWorkBook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MapperType.cs" />
     <Compile Include="SourceHelper.cs" />
     <Compile Include="Impl\BIFF\XWorkBook.cs" />
     <Compile Include="XLEntityHelper.cs" />
