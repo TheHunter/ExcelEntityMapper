@@ -38,8 +38,7 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be read a xls file.")]
         public void ReadObjectsTest1()
         {
-            //IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 1, this.PropertyMappersPerson);
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 1, GetPersonMapper2());
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
             sheet.BeforeReading = person => person.OwnCar = new Car();
 
@@ -58,7 +57,7 @@ namespace ExcelEntityMapperTest
         [Description("Reading a empty workbook without header.")]
         public void ReadObjectsTest2()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 0, this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
             sheet.SheetName = "Persons2";
 
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
@@ -76,7 +75,7 @@ namespace ExcelEntityMapperTest
         [Description("Reading a empty workbook with header.")]
         public void ReadObjectsTest3()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 1, this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
 
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
@@ -94,7 +93,7 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be saved a new workbook with header of properties mapped.")]
         public void WriteObjectsTest1()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 1, this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
 
             XWorkBook workbook = new XWorkBook();
@@ -113,7 +112,7 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be saved a new workbook without header of properties mapped.")]
         public void WriteObjectsTest2()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 0, this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
 
             XWorkBook workbook = new XWorkBook();
@@ -133,7 +132,7 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be saved a new workbook with header of properties mapped, using a sheet with header.")]
         public void WriteObjectsTest3()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(2, 1, this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
             sheet.BeforeReading = n => n.OwnCar = new Car();
 

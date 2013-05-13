@@ -12,49 +12,39 @@ namespace ExcelEntityMapper.Impl
     public abstract class SheetBase
         : IXLSheet
     {
-        private readonly int indexKeyColumn;
         private readonly int headerRows;
         private readonly int offset;
         private string sheetName;
         private int lastColumn = 1;
+        private int firstColumn = 1;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
-        protected SheetBase(int indexkeyColumn)
-            :this(indexkeyColumn, 0, false)
+        protected SheetBase()
+            :this(0, false)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="zeroBase"></param>
-        protected SheetBase(int indexkeyColumn, bool zeroBase)
-            : this(indexkeyColumn, 0, zeroBase)
+        protected SheetBase(bool zeroBase)
+            : this(0, zeroBase)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="headerRows"></param>
         /// <param name="zeroBase"></param>
-        protected SheetBase(int indexkeyColumn, int headerRows, bool zeroBase)
+        protected SheetBase(int headerRows, bool zeroBase)
         {
-            if (indexkeyColumn < 1)
-                throw new SheetParameterException(
-                    string.Format(
-                        "L'indice della colonna in cui si trova la chiave non puo' essere inferiore a uno, valore: {0}",
-                        indexkeyColumn), "indexkeyColumn");
-
             if (headerRows < 0)
                 headerRows = 0;
 
-            this.indexKeyColumn = indexkeyColumn;
             this.headerRows = headerRows;
 
             if (zeroBase) this.offset = 1;
@@ -78,9 +68,15 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
-        public int IndexKeyColumn
+        public int FirstColumn
         {
-            get { return this.indexKeyColumn; }
+            get { return this.FirstColumn; }
+            protected set
+            {
+                if (value < 1)
+                    throw new SheetParameterException("Index of first column cannot be less than one.", "value");
+                this.firstColumn = value;
+            }
         }
 
         /// <summary>

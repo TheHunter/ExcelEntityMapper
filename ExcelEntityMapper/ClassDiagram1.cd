@@ -3,7 +3,7 @@
   <Class Name="ExcelEntityMapper.Impl.PropertyMapper&lt;TSource&gt;" Collapsed="true">
     <Position X="16.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAQAAAEAoAAAAEgAAAQAAAEAAgAIAAAAAIAAAACAA=</HashCode>
+      <HashCode>AAAAQAAAEAoAAAAEgAAAQAAAEAAgAIAAAAAIgAAACAA=</HashCode>
       <FileName>Impl\PropertyMapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -18,7 +18,7 @@
   <Class Name="ExcelEntityMapper.Impl.BIFF.XSheetMapper&lt;TSource&gt;">
     <Position X="8" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAAQYAAAAAAAAABAAgIAAgAQAQAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAAAAAQYAAAAAAAAgBAAgIAAgAQAQAAA=</HashCode>
       <FileName>Impl\BIFF\XSheetMapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -50,7 +50,7 @@
   <Class Name="ExcelEntityMapper.Impl.Xml.XLSheetMapper&lt;TSource&gt;">
     <Position X="11" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAAQYAAIAAAAAABAAgIAAgAQAQAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAAAAAQYAAIAAAAAgBAAgIAAgAQAQAAA=</HashCode>
       <FileName>Impl\Xml\XLSheetMapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -66,7 +66,7 @@
   <Class Name="ExcelEntityMapper.Impl.SheetBase" Collapsed="true">
     <Position X="9.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAEIAQABAAEAAAAAAAEAAIABAACAAAAAAAAgAA=</HashCode>
+      <HashCode>AACAAAAAIAQAAAAEAAAAAAAEAAIABBACAAAQAAAAgAA=</HashCode>
       <FileName>Impl\SheetBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -124,7 +124,7 @@
   <Interface Name="ExcelEntityMapper.IXLSheet">
     <Position X="2.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEIAAAAAAEAAAAAAAEAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAAAAEAAAAAAAEAAIAABAAAAAAAAAAAAA=</HashCode>
       <FileName>IXLSheet.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -159,7 +159,7 @@
   <Interface Name="ExcelEntityMapper.IXLPropertyMapper&lt;TSource&gt;" Collapsed="true">
     <Position X="16.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEAAAAAAAAAAAQAAAAAAgAAAAAAAIAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAQAAAAAAgAAAAAAAIgAAAAAA=</HashCode>
       <FileName>IXLPropertyMapper.cs</FileName>
     </TypeIdentifier>
   </Interface>

@@ -20,7 +20,7 @@ namespace ExcelEntityMapperTest
         public virtual void OnStartUp()
         {
             outputPath = Path.GetTempPath();
-            propertyMappersPerson = GetPersonMapper();
+            propertyMappersPerson = GetPersonMapper2();
         }
 
         [TestFixtureTearDown]
