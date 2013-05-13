@@ -16,9 +16,9 @@ namespace ExcelEntityMapper
         string SheetName { get; set; }
 
         /// <summary>
-        /// Rappresents the index key column wich be used for mapping a valid row.
+        /// Rappresents the first column mapped.
         /// </summary>
-        int IndexKeyColumn { get; }
+        int FirstColumn { get; }
 
         /// <summary>
         /// Rappresents the last column mapped.

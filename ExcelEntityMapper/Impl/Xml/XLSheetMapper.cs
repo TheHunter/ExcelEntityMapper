@@ -19,23 +19,20 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="propertyMappers"></param>
-        public XLSheetMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : this(indexkeyColumn, 0, propertyMappers)
+        public XLSheetMapper(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : this(0, propertyMappers)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="headerRows"></param>
         /// <param name="propertyMappers"></param>
-        public XLSheetMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, headerRows, false, propertyMappers)
+        public XLSheetMapper(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(headerRows, false, propertyMappers)
         {
-            this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max();
         }
 
         /// <summary>
@@ -46,7 +43,11 @@ namespace ExcelEntityMapper.Impl.Xml
         public void ChangeBackGround(int index, XLColor color)
         {
             IXLWorksheet workSheet = this.GetWorkSheet(this.SheetName);
-            workSheet.Row(index).Cells(this.IndexKeyColumn, this.LastColumn).Style.Fill.BackgroundColor = color;
+            workSheet.Row(index)
+                .Cells(this.FirstColumn, this.LastColumn)
+                .Style
+                .Fill
+                .BackgroundColor = color;
         }
 
         /// <summary>
@@ -105,7 +106,6 @@ namespace ExcelEntityMapper.Impl.Xml
                 row = row.RowBelow(this.HeaderRows);
 
             int counter = 0;
-            //while (!row.Cell(this.IndexKeyColumn).IsEmpty())
             while (IsReadableRead(row))
             {
                 counter++;
@@ -281,10 +281,23 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         private IXLRow GetFirstRow(IXLWorksheet workSheet)
         {
-            IXLCell current = workSheet.Column(this.IndexKeyColumn).FirstCellUsed();
-            if (current != null)
-                return current.WorksheetRow();
-            return null;
+            IXLRow firstRow = workSheet.FirstRowUsed();
+            IXLRow lastRow = workSheet.LastRowUsed();
+
+            if (firstRow != null && lastRow != null)
+            {
+                int firstIndex = firstRow.RowNumber();
+                int lastIndex = lastRow.RowNumber();
+
+                for (int index = firstIndex; index <= lastIndex; index++)
+                {
+                    firstRow = workSheet.Row(index);
+                    if (IsReadableRead(firstRow))
+                        break;
+                }
+            }
+
+            return firstRow;
         }
 
         /// <summary>
@@ -294,10 +307,24 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         private IXLRow GetLastRow(IXLWorksheet workSheet)
         {
-            IXLCell current = workSheet.Column(this.IndexKeyColumn).LastCellUsed();
-            if (current != null)
-                return current.WorksheetRow();
-            return null;
+            IXLRow firstRow = GetFirstRow(workSheet);
+            IXLRow lastRow = workSheet.LastRowUsed();
+
+            if (firstRow != null && lastRow != null)
+            {
+                int firstIndex = firstRow.RowNumber();
+                int lastIndex = lastRow.RowNumber();
+
+                for (int index = firstIndex; index <= lastIndex; index++)
+                {
+                    IXLRow currRow = workSheet.Row(index);
+                    if (!IsReadableRead(currRow))
+                        break;
+                    lastRow = currRow;
+                }
+            }
+
+            return lastRow;
         }
     }
 }

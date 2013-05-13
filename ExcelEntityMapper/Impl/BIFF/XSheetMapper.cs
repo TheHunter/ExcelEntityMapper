@@ -20,23 +20,21 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="propertyMappers"></param>
-        public XSheetMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : this(indexkeyColumn, 0, propertyMappers)
+        public XSheetMapper(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : this(0, propertyMappers)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="headerRows"></param>
         /// <param name="propertyMappers"></param>
-        public XSheetMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, headerRows, true, propertyMappers)
+        public XSheetMapper(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(headerRows, true, propertyMappers)
         {
-            this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max() - this.Offset;
+            //this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max() - this.Offset;
         }
 
         /// <summary>
@@ -293,14 +291,15 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
             int firstRow = workSheet.FirstRowNum;
             int lastrow = workSheet.LastRowNum;
-            int indKey = this.IndexKeyColumn - this.Offset;
             
             IRow first = null;
 
             for (int index = firstRow; index <= lastrow; index++)
             {
                 first = workSheet.GetRow(index);
-                if (first != null && first.Cells.FirstOrDefault(n => n.ColumnIndex == indKey) != null)
+                //if (first != null && first.Cells.FirstOrDefault(n => n.ColumnIndex == indKey) != null)
+                //    break;
+                if (IsReadableRead(first))
                     break;
             }
             return first;
@@ -317,14 +316,13 @@ namespace ExcelEntityMapper.Impl.BIFF
 
             if (last != null)
             {
-                int firstRow = last.RowNum + 1;
+                int firstRow = last.RowNum;
                 int lastrow = workSheet.LastRowNum;
-                int indKey = this.IndexKeyColumn - this.Offset;
 
                 for (int index = firstRow; index <= lastrow; index++)
                 {
                     IRow tmp = workSheet.GetRow(index);
-                    if (tmp == null || tmp.Cells.FirstOrDefault(n => n.ColumnIndex == indKey) == null)
+                    if (!IsReadableRead(tmp))
                         break;
                     last = tmp;
                 }

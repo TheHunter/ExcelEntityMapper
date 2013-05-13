@@ -14,7 +14,6 @@ namespace ExcelEntityMapper.Impl
         : SheetBase, IXLSheetMapper<TSource>
         where TSource : class, new()
     {
-
         private Action<TSource> beforeReading;
         private Action<TSource> afterReading;
         private Action<TSource> beforeWriting;
@@ -24,14 +23,17 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="headerRows"></param>
         /// <param name="zeroBase"></param>
         /// <param name="propertyMappers"></param>
-        public SheetMapper(int indexkeyColumn, int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, headerRows, zeroBase)
+        protected SheetMapper(int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(headerRows, zeroBase)
         {
             this.PropertyMappers = propertyMappers;
+
+            this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max();
+            this.FirstColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Min();
+            
         }
 
         /// <summary>

@@ -16,21 +16,19 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="parameters"></param>
-        public XLSheetFilteredMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> parameters)
-            : this(indexkeyColumn, 0, parameters)
+        public XLSheetFilteredMapper(IEnumerable<IXLPropertyMapper<TSource>> parameters)
+            : this(0, parameters)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="indexkeyColumn"></param>
         /// <param name="headerRows"></param>
         /// <param name="parameters"></param>
-        public XLSheetFilteredMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> parameters)
-            : base(indexkeyColumn, headerRows, parameters)
+        public XLSheetFilteredMapper(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> parameters)
+            : base(headerRows, parameters)
         {
 
         }
