@@ -106,7 +106,7 @@ namespace ExcelEntityMapper.Impl.Xml
                 row = row.RowBelow(this.HeaderRows);
 
             int counter = 0;
-            while (IsReadableRead(row))
+            while (IsReadableRow(row))
             {
                 counter++;
                 try
@@ -167,7 +167,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private bool IsReadableRead(IXLRow row)
+        private bool IsReadableRow(IXLRow row)
         {
             var col = this.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
             return col.Any() && col.All(n => !row.Cell(n.ColumnIndex).IsEmpty());
@@ -281,19 +281,22 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         private IXLRow GetFirstRow(IXLWorksheet workSheet)
         {
-            IXLRow firstRow = workSheet.FirstRowUsed();
+            IXLRow firstRow = null;
             IXLRow lastRow = workSheet.LastRowUsed();
 
-            if (firstRow != null && lastRow != null)
+            if (lastRow != null)
             {
-                int firstIndex = firstRow.RowNumber();
+                int firstIndex = 1;
                 int lastIndex = lastRow.RowNumber();
 
                 for (int index = firstIndex; index <= lastIndex; index++)
                 {
-                    firstRow = workSheet.Row(index);
-                    if (IsReadableRead(firstRow))
+                    lastRow = workSheet.Row(index);
+                    if (IsReadableRow(lastRow))
+                    {
+                        firstRow = lastRow;
                         break;
+                    }
                 }
             }
 
@@ -318,10 +321,14 @@ namespace ExcelEntityMapper.Impl.Xml
                 for (int index = firstIndex; index <= lastIndex; index++)
                 {
                     IXLRow currRow = workSheet.Row(index);
-                    if (!IsReadableRead(currRow))
+                    if (!IsReadableRow(currRow))
                         break;
                     lastRow = currRow;
                 }
+            }
+            else
+            {
+                lastRow = null;
             }
 
             return lastRow;

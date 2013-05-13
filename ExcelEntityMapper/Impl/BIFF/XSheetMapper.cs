@@ -99,7 +99,7 @@ namespace ExcelEntityMapper.Impl.BIFF
             if (this.HasHeader)
                 row = workSheet.GetRow(row.RowNum + this.HeaderRows);
 
-            while (IsReadableRead(row))
+            while (IsReadableRow(row))
             {
                 counter++;
                 try
@@ -161,7 +161,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        private bool IsReadableRead(IRow row)
+        private bool IsReadableRow(IRow row)
         {
             if (row == null)
                 return false;
@@ -289,18 +289,20 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns></returns>
         private IRow GetFirstRow(ISheet workSheet)
         {
-            int firstRow = workSheet.FirstRowNum;
+            //int firstRow = workSheet.FirstRowNum;
+            int firstRow = 0;
             int lastrow = workSheet.LastRowNum;
             
             IRow first = null;
 
             for (int index = firstRow; index <= lastrow; index++)
             {
-                first = workSheet.GetRow(index);
-                //if (first != null && first.Cells.FirstOrDefault(n => n.ColumnIndex == indKey) != null)
-                //    break;
-                if (IsReadableRead(first))
+                IRow current = workSheet.GetRow(index);
+                if (IsReadableRow(current))
+                {
+                    first = current;
                     break;
+                }
             }
             return first;
         }
@@ -322,7 +324,7 @@ namespace ExcelEntityMapper.Impl.BIFF
                 for (int index = firstRow; index <= lastrow; index++)
                 {
                     IRow tmp = workSheet.GetRow(index);
-                    if (!IsReadableRead(tmp))
+                    if (!IsReadableRow(tmp))
                         break;
                     last = tmp;
                 }

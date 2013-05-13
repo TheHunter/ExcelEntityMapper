@@ -148,6 +148,38 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header2.xls"), workbook.Save());
         }
 
+
+        [Test]
+        [Category("WriterXLS")]
+        [Description("A test which demostrate how can be written two typed objects into the same sheet.")]
+        public void WriteObjectsTest4()
+        {
+
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons";
+            sheet.BeforeReading = n => n.OwnCar = new Car();
+
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+            workbook.AddSheet(sheet.SheetName);
+
+            sheet.InjectWorkBook(workbook);
+
+            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
+            var count = sheet.WriteObjects(GetDefaultPersons());
+
+
+            //
+            IXLSheetFiltered<Car> sheetCar = new XSheetFilteredMapper<Car>(1, GetCarMapper1());
+            sheetCar.SheetName = sheet.SheetName;
+            sheetCar.InjectWorkBook(workbook);
+            var carsWritten = sheetCar.WriteObjects(GetDefaultCars());
+
+            Assert.IsTrue(count > 0 && carsWritten > 0);
+            WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header3.xls"), workbook.Save());
+
+        }
+
+
         //[Test]
         [Category("Demo")]
         public void Test1()
@@ -248,6 +280,8 @@ namespace ExcelEntityMapperTest
 
             var firstrow = sheet.FirstRowNum;
             var lastrow = sheet.LastRowNum;
+
+            
 
             Assert.IsTrue(true);
         }
