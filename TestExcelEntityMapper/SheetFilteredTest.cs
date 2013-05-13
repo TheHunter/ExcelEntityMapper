@@ -93,13 +93,28 @@ namespace ExcelEntityMapperTest
         public static IEnumerable<IXLPropertyMapper<Person>> GetPersonMapper()
         {
             List<IXLPropertyMapper<Person>> parameters = new List<IXLPropertyMapper<Person>>();
-            parameters.Add(new PropertyMapper<Person>(1, "Name", (instance, cellValue) => instance.Name = cellValue, n => n.Name));
-            parameters.Add(new PropertyMapper<Person>(2, "Surname", (instance, cellValue) => instance.Surname = cellValue, n => n.Surname));
-            parameters.Add(new PropertyMapper<Person>(3, "MarriedYear", (instance, cellValue) => instance.MarriedYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.MarriedYear)));
-            parameters.Add(new PropertyMapper<Person>(4, "DataNascita", (instance, cellValue) => instance.BirthDate = XLEntityHelper.ToPropertyFormat<DateTime>(cellValue), n => n.BirthDate.HasValue ? n.BirthDate.Value.ToString("dd/MM/yyyy") : null));
-            parameters.Add(new PropertyMapper<Person>(5, (instance, cellValue) => instance.OwnCar.Name = cellValue, n => n.OwnCar.Name));
-            parameters.Add(new PropertyMapper<Person>(6, (instance, cellValue) => instance.OwnCar.Targa = cellValue, n => n.OwnCar.Targa));
-            parameters.Add(new PropertyMapper<Person>(7, "Anno Immatricolazione", (instance, cellValue) => instance.OwnCar.BuildingYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.OwnCar.BuildingYear)));
+
+            parameters.Add(new PropertyMapper<Person>(2, "Name", (instance, cellValue) => instance.Name = cellValue, n => n.Name));
+            parameters.Add(new PropertyMapper<Person>(3, "Surname", (instance, cellValue) => instance.Surname = cellValue, n => n.Surname));
+            parameters.Add(new PropertyMapper<Person>(4, "MarriedYear", (instance, cellValue) => instance.MarriedYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.MarriedYear)));
+            parameters.Add(new PropertyMapper<Person>(5, "DataNascita", (instance, cellValue) => instance.BirthDate = XLEntityHelper.ToPropertyFormat<DateTime>(cellValue), n => n.BirthDate.HasValue ? n.BirthDate.Value.ToString("dd/MM/yyyy") : null));
+            parameters.Add(new PropertyMapper<Person>(6, (instance, cellValue) => instance.OwnCar.Name = cellValue, n => n.OwnCar.Name));
+            parameters.Add(new PropertyMapper<Person>(7, (instance, cellValue) => instance.OwnCar.Targa = cellValue, n => n.OwnCar.Targa));
+            parameters.Add(new PropertyMapper<Person>(8, "Anno Immatricolazione", (instance, cellValue) => instance.OwnCar.BuildingYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.OwnCar.BuildingYear)));
+            return parameters;
+        }
+
+        public static IEnumerable<IXLPropertyMapper<Person>> GetPersonMapper2()
+        {
+            List<IXLPropertyMapper<Person>> parameters = new List<IXLPropertyMapper<Person>>();
+
+            parameters.Add(new PropertyMapper<Person>(2, MapperType.Key, (instance, cellValue) => instance.Name = cellValue, n => n.Name));
+            parameters.Add(new PropertyMapper<Person>(3, MapperType.Key, (instance, cellValue) => instance.Surname = cellValue, n => n.Surname));
+            parameters.Add(new PropertyMapper<Person>(4, (instance, cellValue) => instance.MarriedYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.MarriedYear)));
+            parameters.Add(new PropertyMapper<Person>(5, (instance, cellValue) => instance.BirthDate = XLEntityHelper.ToPropertyFormat<DateTime>(cellValue), n => n.BirthDate.HasValue ? n.BirthDate.Value.ToString("dd/MM/yyyy") : null));
+            parameters.Add(new PropertyMapper<Person>(6, (instance, cellValue) => instance.OwnCar.Name = cellValue, n => n.OwnCar.Name));
+            parameters.Add(new PropertyMapper<Person>(7, (instance, cellValue) => instance.OwnCar.Targa = cellValue, n => n.OwnCar.Targa));
+            parameters.Add(new PropertyMapper<Person>(8, (instance, cellValue) => instance.OwnCar.BuildingYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.OwnCar.BuildingYear)));
             return parameters;
         }
     }

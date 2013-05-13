@@ -104,7 +104,27 @@ namespace ExcelEntityMapper
 
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expr"></param>
+        /// <param name="defaultName"></param>
+        /// <returns></returns>
+        internal static string GetDefaultMemberName(Expression expr, string defaultName)
+        {
+            try
+            {
+                var temp = SourceHelper.GetMemberInfo(expr);
+                return temp.Key;
+            }
+            catch (Exception)
+            {
+                if (string.IsNullOrEmpty(defaultName))
+                    throw new ArgumentException("The default Name to apply a property name cannot be null or empty", "defaultName");
 
+                // non si fa nulla se non si recupera il nome completo della property da mappare.
+                return defaultName;
+            }
+        }
     }
 }

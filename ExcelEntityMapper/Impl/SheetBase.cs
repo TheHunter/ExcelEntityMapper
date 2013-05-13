@@ -13,7 +13,7 @@ namespace ExcelEntityMapper.Impl
         : IXLSheet
     {
         private readonly int indexKeyColumn;
-        private readonly bool hasHeader = true;
+        private readonly int headerRows;
         private readonly int offset;
         private string sheetName;
         private int lastColumn = 1;
@@ -23,7 +23,7 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         /// <param name="indexkeyColumn"></param>
         protected SheetBase(int indexkeyColumn)
-            :this(indexkeyColumn, false, false)
+            :this(indexkeyColumn, 0, false)
         {
         }
 
@@ -33,7 +33,7 @@ namespace ExcelEntityMapper.Impl
         /// <param name="indexkeyColumn"></param>
         /// <param name="zeroBase"></param>
         protected SheetBase(int indexkeyColumn, bool zeroBase)
-            : this(indexkeyColumn, false, zeroBase)
+            : this(indexkeyColumn, 0, zeroBase)
         {
         }
 
@@ -41,9 +41,9 @@ namespace ExcelEntityMapper.Impl
         /// 
         /// </summary>
         /// <param name="indexkeyColumn"></param>
-        /// <param name="hasHeader"></param>
+        /// <param name="headerRows"></param>
         /// <param name="zeroBase"></param>
-        protected SheetBase(int indexkeyColumn, bool hasHeader, bool zeroBase)
+        protected SheetBase(int indexkeyColumn, int headerRows, bool zeroBase)
         {
             if (indexkeyColumn < 1)
                 throw new SheetParameterException(
@@ -51,8 +51,11 @@ namespace ExcelEntityMapper.Impl
                         "L'indice della colonna in cui si trova la chiave non puo' essere inferiore a uno, valore: {0}",
                         indexkeyColumn), "indexkeyColumn");
 
+            if (headerRows < 0)
+                headerRows = 0;
+
             this.indexKeyColumn = indexkeyColumn;
-            this.hasHeader = hasHeader;
+            this.headerRows = headerRows;
 
             if (zeroBase) this.offset = 1;
         }
@@ -99,7 +102,15 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         public bool HasHeader
         {
-            get { return this.hasHeader; }
+            get { return headerRows > 0; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int HeaderRows
+        {
+            get { return this.headerRows; }
         }
 
         /// <summary>

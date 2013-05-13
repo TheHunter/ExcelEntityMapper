@@ -13,16 +13,25 @@ namespace ExcelEntityMapper
         : IXLSheet
         where TSource : class, new()
     {
+        /// <summary>
+        /// Executes the indicated action before setting instance values properties from worksheet assigned.
+        /// </summary>
+        Action<TSource> BeforeReading { get; set; }
 
         /// <summary>
-        /// Executes the indicated action before mapping column values into properties instances.
+        /// Executes the indicated action after setting instance values properties from worksheet assigned.
         /// </summary>
-        Action<TSource> BeforeMapping { get; }
+        Action<TSource> AfterReading { get; set; }
+        
+        /// <summary>
+        /// Executes the indicated action before writing instance values properties into worksheet assigned.
+        /// </summary>
+        Action<TSource> BeforeWriting { get; set; }
 
         /// <summary>
-        /// Executes the indicated action after mapping column values into current computed instance.
+        /// Executes the indicated action after writing instance values properties into worksheet assigned.
         /// </summary>
-        Action<TSource> AfterMapping { get; }
+        Action<TSource> AfterWriting { get; set; }
 
         /// <summary>
         /// A collection which contains custom instances for mapping properties with sheet columns.

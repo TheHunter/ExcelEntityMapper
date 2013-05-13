@@ -15,49 +15,85 @@ namespace ExcelEntityMapper.Impl
 		where TSource : class
 	{
 		private int columnIndex = -1;
+		private string columnHeader;
+	    private MapperType propMapper = MapperType.Simple;
 		private Func<TSource, string> toExcelFormat;
 		private Action<TSource, string> toPropertyFormat;
-		private string columnHeader;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="toPropertyFormat"></param>
+        /// <param name="toExcelFormat"></param>
+        public PropertyMapper(int column, Action<TSource, string> toPropertyFormat,
+                              Expression<Func<TSource, string>> toExcelFormat)
+            : this(
+                column, MapperType.Simple, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"),
+                toPropertyFormat, toExcelFormat)
+        {
+            
+        }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="column"></param>
+		/// <param name="mapperType"></param>
 		/// <param name="toPropertyFormat"></param>
 		/// <param name="toExcelFormat"></param>
-		public PropertyMapper(int column, Action<TSource, string> toPropertyFormat, Expression<Func<TSource, string>> toExcelFormat)
+		public PropertyMapper(int column, MapperType mapperType, Action<TSource, string> toPropertyFormat,
+		                      Expression<Func<TSource, string>> toExcelFormat)
+		    : this(
+		        column, mapperType, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"), toPropertyFormat,
+		        toExcelFormat)
 		{
-			this.toPropertyFormat = null;
-			this.ColumnIndex = column;
-			this.ToPropertyFormat = toPropertyFormat;
-			this.ToExcelFormat = toExcelFormat.Compile();
+            //this.ColumnIndex = column;
+            //this.ToPropertyFormat = toPropertyFormat;
+            //this.ToExcelFormat = toExcelFormat.Compile();
 
-			try
-			{
-				var temp = SourceHelper.GetMemberInfo(toExcelFormat);
-				this.ColumnHeader = temp.Key;
-			}
-			catch (Exception)
-			{
-				// non si fa nulla se non si recupera il nome completo della property da mappare.
-				this.ColumnHeader = "No Property header";
-			}
+            //try
+            //{
+            //    var temp = SourceHelper.GetMemberInfo(toExcelFormat);
+            //    this.ColumnHeader = temp.Key;
+            //}
+            //catch (Exception)
+            //{
+            //    // non si fa nulla se non si recupera il nome completo della property da mappare.
+            //    this.ColumnHeader = "No Property header";
+            //}
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="columnHeader"></param>
+        /// <param name="toPropertyFormat"></param>
+        /// <param name="toExcelFormat"></param>
+        public PropertyMapper(int column, string columnHeader,
+                              Action<TSource, string> toPropertyFormat, Expression<Func<TSource, string>> toExcelFormat)
+            :this(column, MapperType.Simple, columnHeader, toPropertyFormat, toExcelFormat)
+        {
+            
+        }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="column"></param>
+		/// <param name="mapperType"></param>
 		/// <param name="columnHeader"></param>
 		/// <param name="toPropertyFormat"></param>
 		/// <param name="toExcelFormat"></param>
-		public PropertyMapper(int column, string columnHeader, Action<TSource, string> toPropertyFormat, Expression<Func<TSource, string>> toExcelFormat)
+		public PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat,
+		                      Expression<Func<TSource, string>> toExcelFormat)
 		{
-			this.toPropertyFormat = null;
-			this.ColumnIndex = column;
-			this.ToPropertyFormat = toPropertyFormat;
-			this.ToExcelFormat = toExcelFormat.Compile();
-			this.ColumnHeader = columnHeader;
+            this.ColumnIndex = column;
+            this.propMapper = mapperType;
+            this.ColumnHeader = columnHeader;
+            this.ToPropertyFormat = toPropertyFormat;
+            this.ToExcelFormat = toExcelFormat.Compile();
 		}
 
 		/// <summary>
@@ -92,6 +128,14 @@ namespace ExcelEntityMapper.Impl
 				}
 			}
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+	    public MapperType CustomType
+	    {
+            get { return this.propMapper; }
+	    }
 
 		/// <summary>
 		/// 

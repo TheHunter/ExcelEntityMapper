@@ -23,7 +23,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <param name="indexkeyColumn"></param>
         /// <param name="propertyMappers"></param>
         public XSheetMapper(int indexkeyColumn, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : this(indexkeyColumn, false, propertyMappers)
+            : this(indexkeyColumn, 0, propertyMappers)
         {
         }
 
@@ -31,10 +31,10 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// 
         /// </summary>
         /// <param name="indexkeyColumn"></param>
-        /// <param name="hasHeader"></param>
+        /// <param name="headerRows"></param>
         /// <param name="propertyMappers"></param>
-        public XSheetMapper(int indexkeyColumn, bool hasHeader, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(indexkeyColumn, hasHeader, true, propertyMappers)
+        public XSheetMapper(int indexkeyColumn, int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(indexkeyColumn, headerRows, true, propertyMappers)
         {
             this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max() - this.Offset;
         }
@@ -82,20 +82,10 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public int ReadObjects(IDictionary<int, TSource> buffer)
-        {
-            return this.ReadObjects(this.SheetName, buffer);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        public int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
+        public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
             if (this.workBook == null)
                 throw new UnReadableSheetException("The current workbook to use cannot be null.");
@@ -105,25 +95,26 @@ namespace ExcelEntityMapper.Impl.BIFF
             IRow row = this.GetFirstRow(workSheet);
             int counter = 0;
 
-            if (row == null)        //no rows used.
+            if (row == null)
                 return counter;
 
             if (this.HasHeader)
-                row = workSheet.GetRow(row.RowNum + 1);
+                row = workSheet.GetRow(row.RowNum + this.HeaderRows);
 
-            ICell KeyCell;
-            while (row != null
-                && (KeyCell = row.GetCell(this.IndexKeyColumn - this.Offset)) != null
-                && !string.IsNullOrEmpty(KeyCell.StringCellValue)
-                )
+            while (IsReadableRead(row))
             {
                 counter++;
-                TSource current = this.ReadInstance(row);
-                if (current != null)
+                try
                 {
-                    buffer.Add(row.RowNum, current);
+                    TSource current = this.ReadInstance(row);
+                    if (current != null)
+                        buffer.Add(row.RowNum, current);
+                    row = workSheet.GetRow(row.RowNum + 1);
                 }
-                row = workSheet.GetRow(row.RowNum + 1);
+                catch
+                {
+                    // any kind of exception cannot be blocking, so It reads the next row..
+                }
             }
             return counter;
         }
@@ -140,8 +131,8 @@ namespace ExcelEntityMapper.Impl.BIFF
             {
                 instance = SourceHelper.CreateInstance<TSource>();
 
-                if (this.BeforeMapping != null)
-                    this.BeforeMapping.Invoke(instance);
+                if (this.BeforeReading != null)
+                    this.BeforeReading.Invoke(instance);
 
                 this.PropertyMappers.All
                     (
@@ -151,9 +142,7 @@ namespace ExcelEntityMapper.Impl.BIFF
                             {
                                 ICell cell = row.GetCell(parameter.ColumnIndex - this.Offset);
                                 if (cell != null)
-                                {
                                     parameter.ToPropertyFormat(instance, cell.StringCellValue);
-                                }
                             }
                             catch
                             {
@@ -162,6 +151,9 @@ namespace ExcelEntityMapper.Impl.BIFF
                             return true;
                         }
                     );
+
+                if (this.AfterReading != null)
+                    this.AfterReading(instance);
             }
             return instance;
         }
@@ -169,11 +161,24 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="instances"></param>
+        /// <param name="row"></param>
         /// <returns></returns>
-        public int WriteObjects(IEnumerable<TSource> instances)
+        private bool IsReadableRead(IRow row)
         {
-            return this.WriteObjects(this.SheetName, instances);
+            if (row == null)
+                return false;
+
+            var col = this.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
+            return col.Any() && col.All
+                (
+                    mapper =>
+                        {
+                            ICell cell = row.GetCell(mapper.ColumnIndex - this.Offset);
+                            if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
+                                return false;
+                            return true;
+                        }
+                );
         }
 
         /// <summary>
@@ -182,7 +187,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <param name="sheetName"></param>
         /// <param name="instances"></param>
         /// <returns></returns>
-        public int WriteObjects(string sheetName, IEnumerable<TSource> instances)
+        public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
             if (this.workBook == null)
                 throw new UnWriteableSheetException("The current workbook to use cannot be null.");
@@ -192,27 +197,26 @@ namespace ExcelEntityMapper.Impl.BIFF
             int counter = 0;
             if (instances != null && instances.Any())
             {
-                IRow row;
                 int rowIndex = -1;
-                IRow header = GetFirstRow(workSheet);
+                IRow lastRow = GetLastRow(workSheet); //
 
                 if (this.HasHeader)
                 {
-                    if (header == null)
+                    if (lastRow == null)
                     {
                         rowIndex = 0;
                         this.WriteHeader(rowIndex, workSheet);
                     }
                     else
                     {
-                        rowIndex = header.RowNum;
+                        rowIndex = lastRow.RowNum; //+ (this.HeaderRows - 1);
                     }
                 }
 
                 foreach (var current in instances)
                 {
                     rowIndex++;
-                    row = workSheet.GetRow(rowIndex);
+                    IRow row = workSheet.GetRow(rowIndex);
 
                     if (row == null)
                         row = workSheet.CreateRow(rowIndex);
@@ -235,16 +239,19 @@ namespace ExcelEntityMapper.Impl.BIFF
         private bool WriteInstance(IRow row, TSource instance)
         {
             bool ret = false;
+
+            if (this.BeforeWriting != null)
+                this.BeforeWriting(instance);
+
             if (instance != null && row != null)
             {
-                ICell cell;
                 this.PropertyMappers.All
                 (
                     parameter =>
                     {
                         try
                         {
-                            cell = row.CreateCell(parameter.ColumnIndex - this.Offset);
+                            ICell cell = row.CreateCell(parameter.ColumnIndex - this.Offset);
                             cell.SetCellValue(parameter.ToExcelFormat(instance));
                         }
                         catch (Exception)
@@ -256,6 +263,10 @@ namespace ExcelEntityMapper.Impl.BIFF
                     );
                 ret = true;
             }
+
+            if (this.AfterWriting != null)
+                this.AfterWriting(instance);
+
             return ret;
         }
 
@@ -303,7 +314,6 @@ namespace ExcelEntityMapper.Impl.BIFF
         private IRow GetLastRow(ISheet workSheet)
         {
             IRow last = this.GetFirstRow(workSheet);
-            IRow tmp = null;
 
             if (last != null)
             {
@@ -313,11 +323,9 @@ namespace ExcelEntityMapper.Impl.BIFF
 
                 for (int index = firstRow; index <= lastrow; index++)
                 {
-                    tmp = workSheet.GetRow(index);
+                    IRow tmp = workSheet.GetRow(index);
                     if (tmp == null || tmp.Cells.FirstOrDefault(n => n.ColumnIndex == indKey) == null)
-                    {
                         break;
-                    }
                     last = tmp;
                 }
             }

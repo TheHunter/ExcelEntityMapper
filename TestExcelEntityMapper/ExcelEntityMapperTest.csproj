@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Domain\Car.cs" />
     <Compile Include="Domain\Person.cs" />
+    <Compile Include="PropertyMapperTest.cs" />
     <Compile Include="SheetBiffFilteredTest.cs" />
     <Compile Include="SheetFilteredTest.cs" />
     <Compile Include="SheetXmlFilteredTest.cs" />

@@ -23,6 +23,11 @@ namespace ExcelEntityMapper
         string ColumnHeader { get; }
 
         /// <summary>
+        /// Rapresents the mapper type for this mapper.
+        /// </summary>
+        MapperType CustomType { get; }
+
+        /// <summary>
         /// The action which serves for setting the property instance.
         /// </summary>
         Action<TSource, string> ToPropertyFormat { get; }
