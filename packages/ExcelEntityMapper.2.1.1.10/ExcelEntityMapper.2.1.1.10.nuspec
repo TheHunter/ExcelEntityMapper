@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>ExcelEntityMapper</id>
+    <version>2.1.1.10</version>
+    <title />
+    <authors>TheHunter</authors>
+    <owners>TheHunter</owners>
+    <licenseUrl>https://raw.github.com/TheHunter/ExcelEntityMapper/prod/lgpl.txt</licenseUrl>
+    <projectUrl>https://github.com/TheHunter/ExcelEntityMapper.git</projectUrl>
+    <iconUrl>C:\Users\Diego\Desktop\Excel.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A .NET solution to read/create/modify Excel files (ex. xls, xlsx formats) without using COM interop, and It provides a set of interfaces that you can use them for mapping worksheets into object classes.</description>
+    <summary>A framework which works with different kind of workbook file (ex. XLS, XLSX), and defines a set of interfaces which are used for mapping properties classes into worksheet columns.</summary>
+    <dependencies>
+      <group targetFramework=".NETFramework0.0">
+        <dependency id="ClosedXML" version="0.68.1" />
+        <dependency id="NPOI" version="1.2.5" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
