@@ -58,7 +58,8 @@ namespace ExcelEntityMapperTest
         public void ReadObjectsTest2()
         {
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
-            sheet.SheetName = "Persons2";
+            sheet.SheetName = "Persons3";
+            sheet.BeforeReading = n => n.OwnCar = new Car();
 
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
 
@@ -126,7 +127,6 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_noHeader.xls"), workbook.Save());
         }
 
-
         [Test]
         [Category("WriterXLS")]
         [Description("A test which demostrate how can be saved a new workbook with header of properties mapped, using a sheet with header.")]
@@ -148,33 +148,41 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header2.xls"), workbook.Save());
         }
 
-
         [Test]
         [Category("WriterXLS")]
         [Description("A test which demostrate how can be written two typed objects into the same sheet.")]
         public void WriteObjectsTest4()
         {
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
 
+            // a sheet mapper for saving objects..
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
             sheet.BeforeReading = n => n.OwnCar = new Car();
-
-            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
-            workbook.AddSheet(sheet.SheetName);
-
             sheet.InjectWorkBook(workbook);
 
-            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
-            var count = sheet.WriteObjects(GetDefaultPersons());
+            // objects will be written into "Persons" sheet
+            var personsWritten = sheet.WriteObjects(GetDefaultPersons());
+            Assert.IsTrue(personsWritten > 0);
 
+            // then, the same objects will be written into another sheet ("Persons2")
+            sheet.SheetName = "Persons2";
+            var personsWritten2 = sheet.WriteObjects(GetDefaultPersons());
+            Assert.IsTrue(personsWritten2 > 0);
 
-            //
+            
+            // a sheet mapper for saving objects..
             IXLSheetFiltered<Car> sheetCar = new XSheetFilteredMapper<Car>(1, GetCarMapper1());
-            sheetCar.SheetName = sheet.SheetName;
+            sheetCar.SheetName = "Persons";
             sheetCar.InjectWorkBook(workbook);
-            var carsWritten = sheetCar.WriteObjects(GetDefaultCars());
 
-            Assert.IsTrue(count > 0 && carsWritten > 0);
+            var carsWritten = sheetCar.WriteObjects(GetDefaultCars());
+            Assert.IsTrue(carsWritten > 0);
+
+            sheetCar.SheetName = "Persons2";
+            var carsWritten2 = sheetCar.WriteObjects(GetDefaultCars());
+            Assert.IsTrue(carsWritten2 > 0);
+
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header3.xls"), workbook.Save());
 
         }
