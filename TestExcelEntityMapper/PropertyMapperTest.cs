@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using ExcelEntityMapper;
 using ExcelEntityMapper.Exceptions;
@@ -56,6 +57,48 @@ namespace ExcelEntityMapperTest
 
             IXLSheetMapper<Person> mapper = new XLSheetMapper<Person>(parameters);
 
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        public void WrongPropertymapper()
+        {
+            var mapper = new PropertyMapper<Person>(0, MapperType.Key, (instance, cellvalue) => instance.Name = cellvalue, n => n.Name);
+        }
+
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        public void WrongPropertymapper1()
+        {
+            var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", n => n.Name);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        public void WrongPropertymapper2()
+        {
+            var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        public void WrongPropertymapper3()
+        {
+            var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (Expression<Func<Person, string>>)null);
+            
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        public void WrongPropertymapper4()
+        {
+            var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", (Action<Person, string>)null);
         }
     }
 }

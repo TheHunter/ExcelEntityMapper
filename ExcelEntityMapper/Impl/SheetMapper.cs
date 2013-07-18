@@ -29,7 +29,7 @@ namespace ExcelEntityMapper.Impl
         protected SheetMapper(int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
             : base(headerRows, zeroBase)
         {
-            if (!propertyMappers.Any(n => n.CustomType == MapperType.Key))
+            if (propertyMappers.All(n => n.CustomType != MapperType.Key))
                 throw new SheetParameterException("The SheetMapper must have at least a key PropertyMapper", "propertyMappers");
 
             var group = propertyMappers

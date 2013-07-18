@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
+using ExcelEntityMapper.Exceptions;
 
 namespace ExcelEntityMapper.Impl
 {
@@ -11,15 +13,13 @@ namespace ExcelEntityMapper.Impl
 	/// </summary>
 	/// <typeparam name="TSource"></typeparam>
 	public class PropertyMapper<TSource>
-		: IXLPropertyMapper<TSource>
+		: ColumnProperty, IXLPropertyMapper<TSource>
 		where TSource : class
 	{
-		private int columnIndex = -1;
-		private string columnHeader;
-	    private MapperType propMapper = MapperType.Simple;
-		private Func<TSource, string> toExcelFormat;
-		private Action<TSource, string> toPropertyFormat;
+		private readonly Action<TSource, string> toPropertyFormat;
+        private readonly Func<TSource, string> toExcelFormat;
 
+        
         /// <summary>
         /// 
         /// </summary>
@@ -35,7 +35,8 @@ namespace ExcelEntityMapper.Impl
             
         }
 
-		/// <summary>
+		
+        /// <summary>
 		/// 
 		/// </summary>
 		/// <param name="column"></param>
@@ -48,22 +49,9 @@ namespace ExcelEntityMapper.Impl
 		        column, mapperType, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"), toPropertyFormat,
 		        toExcelFormat)
 		{
-            //this.ColumnIndex = column;
-            //this.ToPropertyFormat = toPropertyFormat;
-            //this.ToExcelFormat = toExcelFormat.Compile();
-
-            //try
-            //{
-            //    var temp = SourceHelper.GetMemberInfo(toExcelFormat);
-            //    this.ColumnHeader = temp.Key;
-            //}
-            //catch (Exception)
-            //{
-            //    // non si fa nulla se non si recupera il nome completo della property da mappare.
-            //    this.ColumnHeader = "No Property header";
-            //}
 		}
 
+        
         /// <summary>
         /// 
         /// </summary>
@@ -78,6 +66,7 @@ namespace ExcelEntityMapper.Impl
             
         }
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -88,62 +77,72 @@ namespace ExcelEntityMapper.Impl
 		/// <param name="toExcelFormat"></param>
 		public PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat,
 		                      Expression<Func<TSource, string>> toExcelFormat)
+            : this(column, mapperType, columnHeader, SourceOperation.ReadWrite)
 		{
-            this.ColumnIndex = column;
-            this.propMapper = mapperType;
-            this.ColumnHeader = columnHeader;
-            this.ToPropertyFormat = toPropertyFormat;
-            this.ToExcelFormat = toExcelFormat.Compile();
-		}
+            
+            if (toPropertyFormat == null)
+                throw new WrongParameterException("The action for setting property source value cannot be null.", "toPropertyFormat");
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public int ColumnIndex
-		{
-			protected set
-			{
-				if (value < 1)
-					throw new IndexOutOfRangeException("Column index cannot be less than one.");
-				this.columnIndex = value;
-			}
-			get { return this.columnIndex; }
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ColumnHeader
-		{
-			get { return this.columnHeader; }
-			private set
-			{
-				if (string.IsNullOrEmpty(value))
-				{
-					this.columnHeader = "[No property header]";
-				}
-				else
-				{
-					this.columnHeader = value.Trim();
-				}
-			}
+            if (toExcelFormat == null)
+                throw new WrongParameterException("The expression for getting property source value cannot be null.", "toExcelFormat");
+
+            this.toPropertyFormat = toPropertyFormat;
+            this.toExcelFormat = toExcelFormat.Compile();
 		}
 
         /// <summary>
         /// 
         /// </summary>
-	    public MapperType CustomType
-	    {
-            get { return this.propMapper; }
-	    }
+        /// <param name="column"></param>
+        /// <param name="mapperType"></param>
+        /// <param name="columnHeader"></param>
+        /// <param name="operationEnabled"></param>
+        private PropertyMapper(int column, MapperType mapperType, string columnHeader, SourceOperation operationEnabled)
+            : base(column, mapperType, columnHeader, operationEnabled)
+        {
+        }
 
-		/// <summary>
+        #region
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="mapperType"></param>
+        /// <param name="columnHeader"></param>
+        /// <param name="toExcelFormat"></param>
+        public PropertyMapper(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, string>> toExcelFormat)
+            : base(column, mapperType, columnHeader, SourceOperation.Read)
+        {
+            if (toExcelFormat == null)
+                throw new WrongParameterException("The expression for getting property source value cannot be null.", "toExcelFormat");
+
+            this.toExcelFormat = toExcelFormat.Compile();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="mapperType"></param>
+        /// <param name="columnHeader"></param>
+        /// <param name="toPropertyFormat"></param>
+        public PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat)
+            : base(column, mapperType, columnHeader, SourceOperation.Write)
+        {
+            if (toPropertyFormat == null)
+                throw new WrongParameterException("The action for setting property source value cannot be null.", "toPropertyFormat");
+
+            this.toPropertyFormat = toPropertyFormat;
+        }
+
+        #endregion
+
+        /// <summary>
 		/// 
 		/// </summary>
 		public Action<TSource, string> ToPropertyFormat
 		{
 			get { return this.toPropertyFormat; }
-			private set { this.toPropertyFormat = value; }
 		}
 
 		/// <summary>
@@ -152,7 +151,6 @@ namespace ExcelEntityMapper.Impl
 		public Func<TSource, string> ToExcelFormat
 		{
 			get { return this.toExcelFormat; }
-			private set { this.toExcelFormat = value; }
 		}
 
 		/// <summary>
@@ -162,11 +160,13 @@ namespace ExcelEntityMapper.Impl
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			if (obj != null && obj is PropertyMapper<TSource>)
-			{
-				return this.GetHashCode() == obj.GetHashCode();
-			}
-			return false;
+		    if (obj == null)
+		        return false;
+
+		    if (obj is PropertyMapper<TSource>)
+		        return this.GetHashCode() == obj.GetHashCode();
+		    
+            return false;
 		}
 
 		/// <summary>
@@ -175,7 +175,7 @@ namespace ExcelEntityMapper.Impl
 		/// <returns></returns>
 		public override int GetHashCode()
 		{
-			return ((13 * typeof(TSource).Name.GetHashCode()) - this.columnIndex);
+			return ((13 * typeof(TSource).Name.GetHashCode()) - this.ColumnIndex);
 		}
 
 		/// <summary>

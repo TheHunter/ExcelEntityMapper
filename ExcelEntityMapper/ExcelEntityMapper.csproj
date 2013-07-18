@@ -64,6 +64,8 @@
     <Compile Include="Exceptions\UnReadableSheetException.cs" />
     <Compile Include="Exceptions\UnReadableWorkbookException.cs" />
     <Compile Include="Exceptions\UnWriteableSheetException.cs" />
+    <Compile Include="Exceptions\WrongParameterException.cs" />
+    <Compile Include="Impl\ColumnProperty.cs" />
     <Compile Include="Impl\SheetBase.cs" />
     <Compile Include="Impl\PropertyMapper.cs" />
     <Compile Include="Impl\SheetMapper.cs" />
@@ -72,6 +74,9 @@
     <Compile Include="Impl\Xml\XLWorkBook.cs" />
     <Compile Include="Impl\BIFF\XSheetFilteredMapper.cs" />
     <Compile Include="Impl\BIFF\XSheetMapper.cs" />
+    <Compile Include="IXLProperty.cs" />
+    <Compile Include="IXLPropertyReader.cs" />
+    <Compile Include="IXLPropertyWriter.cs" />
     <Compile Include="IXLSheetMapper.cs" />
     <Compile Include="IXLPropertyMapper.cs" />
     <Compile Include="IXLSheet.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="MapperType.cs" />
     <Compile Include="SourceHelper.cs" />
     <Compile Include="Impl\BIFF\XWorkBook.cs" />
+    <Compile Include="SourceOperation.cs" />
     <Compile Include="XLEntityHelper.cs" />
   </ItemGroup>
   <ItemGroup />

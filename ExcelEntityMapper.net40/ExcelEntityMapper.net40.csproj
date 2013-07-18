@@ -77,6 +77,9 @@
     <Compile Include="..\ExcelEntityMapper\Exceptions\WorkBookException.cs">
       <Link>Exceptions\WorkBookException.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\Exceptions\WrongParameterException.cs">
+      <Link>Exceptions\WrongParameterException.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetFilteredMapper.cs">
       <Link>Impl\BIFF\XSheetFilteredMapper.cs</Link>
     </Compile>
@@ -85,6 +88,9 @@
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XWorkBook.cs">
       <Link>Impl\BIFF\XWorkBook.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\ColumnProperty.cs">
+      <Link>Impl\ColumnProperty.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\PropertyMapper.cs">
       <Link>Impl\PropertyMapper.cs</Link>
@@ -104,8 +110,17 @@
     <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLWorkBook.cs">
       <Link>Impl\Xml\XLWorkBook.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLProperty.cs">
+      <Link>IXLProperty.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\IXLPropertyMapper.cs">
       <Link>IXLPropertyMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLPropertyReader.cs">
+      <Link>IXLPropertyReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXLPropertyWriter.cs">
+      <Link>IXLPropertyWriter.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\IXLSheet.cs">
       <Link>IXLSheet.cs</Link>
@@ -133,6 +148,9 @@
     </Compile>
     <Compile Include="..\ExcelEntityMapper\SourceHelper.cs">
       <Link>SourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\SourceOperation.cs">
+      <Link>SourceOperation.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\XLEntityHelper.cs">
       <Link>XLEntityHelper.cs</Link>
