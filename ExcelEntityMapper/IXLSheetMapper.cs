@@ -11,7 +11,7 @@ namespace ExcelEntityMapper
     /// <typeparam name="TSource"></typeparam>
     public interface IXLSheetMapper<TSource>
         : IXLSheet
-        where TSource : class, new()
+        where TSource : class//, new()
     {
         /// <summary>
         /// Executes the indicated action before setting instance values properties from worksheet assigned.

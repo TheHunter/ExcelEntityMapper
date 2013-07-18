@@ -11,7 +11,7 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public interface IXLSheetWorker<TSource>
-        : IXLSheetMapper<TSource>, IXLSheetReader<TSource>, IXLSheetWriter<TSource>
+        : IXLSheetReader<TSource>, IXLSheetWriter<TSource>
         where TSource : class, new()
     {
 

@@ -100,5 +100,29 @@ namespace ExcelEntityMapperTest
         {
             var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", (Action<Person, string>)null);
         }
+
+        [Test]
+        [Category("WrongMappers")]
+        public void Propertymapper1()
+        {
+            var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", n => n.Name);
+            Assert.AreEqual(mapper.OperationEnabled, SourceOperation.Read);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        public void Propertymapper2()
+        {
+            var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue);
+            Assert.AreEqual(mapper.OperationEnabled, SourceOperation.Write);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        public void Propertymapper3()
+        {
+            var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue, person => person.Name);
+            Assert.AreEqual(mapper.OperationEnabled, SourceOperation.ReadWrite);
+        }
     }
 }

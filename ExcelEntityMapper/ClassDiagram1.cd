@@ -144,35 +144,35 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLSheetFiltered&lt;TSource&gt;">
-    <Position X="3.25" Y="11.25" Width="1.5" />
+    <Position X="3.25" Y="11" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>IXLSheetFiltered.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLSheetReader&lt;TSource&gt;">
-    <Position X="0.75" Y="3.25" Width="1.5" />
+    <Position X="0.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IXLSheetReader.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLSheetWorker&lt;TSource&gt;">
-    <Position X="3.25" Y="8.25" Width="1.5" />
+    <Position X="3.25" Y="8.5" Width="1.5" />
     <InheritanceLine Type="ExcelEntityMapper.IXLSheetReader&lt;TSource&gt;" ManuallyRouted="true">
       <Path>
-        <Point X="1.5" Y="4.353" />
-        <Point X="1.5" Y="7.497" />
-        <Point X="4" Y="7.497" />
-        <Point X="4" Y="8.25" />
+        <Point X="1.5" Y="7.232" />
+        <Point X="1.5" Y="7.872" />
+        <Point X="4" Y="7.872" />
+        <Point X="4" Y="8.5" />
       </Path>
     </InheritanceLine>
     <InheritanceLine Type="ExcelEntityMapper.IXLSheetWriter&lt;TSource&gt;" ManuallyRouted="true">
       <Path>
-        <Point X="6.5" Y="4.353" />
-        <Point X="6.5" Y="7.47" />
-        <Point X="4" Y="7.47" />
-        <Point X="4" Y="8.25" />
+        <Point X="6.5" Y="7.232" />
+        <Point X="6.5" Y="7.879" />
+        <Point X="4" Y="7.879" />
+        <Point X="4" Y="8.5" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -181,7 +181,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLSheetWriter&lt;TSource&gt;">
-    <Position X="5.75" Y="3.25" Width="1.5" />
+    <Position X="5.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
       <FileName>IXLSheetWriter.cs</FileName>
@@ -211,7 +211,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLSheetMapper&lt;TSource&gt;">
-    <Position X="3.25" Y="4.5" Width="1.5" />
+    <Position X="3.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAACCAAAQAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IXLSheetMapper.cs</FileName>

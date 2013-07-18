@@ -10,6 +10,7 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource">The source type which be used for transforming worksheet rows.</typeparam>
     public interface IXLSheetWriter<TSource>
+        : IXLSheetMapper<TSource>
         where TSource : class
     {
         /// <summary>
