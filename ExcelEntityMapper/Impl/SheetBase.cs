@@ -70,7 +70,7 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         public int FirstColumn
         {
-            get { return this.FirstColumn; }
+            get { return this.firstColumn; }
             protected set
             {
                 if (value < 1)

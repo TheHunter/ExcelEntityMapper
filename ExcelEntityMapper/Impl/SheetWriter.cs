@@ -7,12 +7,12 @@ using ExcelEntityMapper.Exceptions;
 namespace ExcelEntityMapper.Impl
 {
     /// <summary>
-    /// 
+    /// /
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
-    public abstract class SheetMapper<TSource>
-        : SheetBase, IXLSheetMapper<TSource>
-        where TSource : class, new()
+    public abstract class SheetWriter<TSource>
+        : SheetBase, IXLSheetWriter<TSource>
+        where TSource : class
     {
         private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 
@@ -22,18 +22,18 @@ namespace ExcelEntityMapper.Impl
         /// <param name="headerRows"></param>
         /// <param name="zeroBase"></param>
         /// <param name="propertyMappers"></param>
-        internal protected SheetMapper(int headerRows, bool zeroBase,
+        internal protected SheetWriter(int headerRows, bool zeroBase,
                                        IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
             : base(headerRows, zeroBase)
         {
             if (propertyMappers == null)
                 throw new SheetParameterException("The sheet mapper cannot be null.", "propertyMappers");
 
-            if (propertyMappers.Count(n => n.CustomType == MapperType.Key) == 0 )
+            if (propertyMappers.Count(n => n.CustomType == MapperType.Key) == 0)
                 throw new SheetParameterException("The SheetMapper must have at least a key PropertyMapper.", "propertyMappers");
 
-            if (propertyMappers.Any(n => n.OperationEnabled != SourceOperation.ReadWrite))
-                throw new SheetParameterException("The SheetMapper must have read and write property mappers", "propertyMappers");
+            if (propertyMappers.Any( n=> n.OperationEnabled == SourceOperation.Write))
+                throw new SheetParameterException("The current sheet writer must have no writeable property mappers.", "propertyMappers");
 
             var group = propertyMappers
                 .GroupBy(n => n.ColumnIndex)
@@ -52,55 +52,12 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
-        public Action<TSource> BeforeReading { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Action<TSource> AfterReading { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public Action<TSource> BeforeWriting { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public Action<TSource> AfterWriting { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers
-        {
-            get { return propertyMappers; }
-            private set
-            {
-                if (value == null || !value.Any())
-                    throw new SheetParameterException("Column parameters cannot be null or empty.", "value");
-
-                this.propertyMappers.AddRange(value);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public int ReadObjects(IDictionary<int, TSource> buffer)
-        {
-            return this.ReadObjects(this.SheetName, buffer);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheetName"></param>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public abstract int ReadObjects(string sheetName, IDictionary<int, TSource> buffer);
 
         /// <summary>
         /// 
@@ -119,5 +76,20 @@ namespace ExcelEntityMapper.Impl
         /// <param name="instances"></param>
         /// <returns></returns>
         public abstract int WriteObjects(string sheetName, IEnumerable<TSource> instances);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers
+        {
+            get { return propertyMappers; }
+            private set
+            {
+                if (value == null || !value.Any())
+                    throw new SheetParameterException("Column parameters cannot be null or empty.", "value");
+
+                this.propertyMappers.AddRange(value);
+            }
+        }
     }
 }

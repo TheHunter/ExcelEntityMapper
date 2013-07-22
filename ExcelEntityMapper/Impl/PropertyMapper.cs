@@ -32,9 +32,7 @@ namespace ExcelEntityMapper.Impl
                 column, MapperType.Simple, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"),
                 toPropertyFormat, toExcelFormat)
         {
-            
         }
-
 		
         /// <summary>
 		/// 
@@ -50,7 +48,6 @@ namespace ExcelEntityMapper.Impl
 		        toExcelFormat)
 		{
 		}
-
         
         /// <summary>
         /// 
@@ -63,9 +60,7 @@ namespace ExcelEntityMapper.Impl
                               Action<TSource, string> toPropertyFormat, Expression<Func<TSource, string>> toExcelFormat)
             :this(column, MapperType.Simple, columnHeader, toPropertyFormat, toExcelFormat)
         {
-            
         }
-
 
 		/// <summary>
 		/// 
@@ -110,7 +105,7 @@ namespace ExcelEntityMapper.Impl
         /// <param name="mapperType"></param>
         /// <param name="columnHeader"></param>
         /// <param name="toExcelFormat"></param>
-        public PropertyMapper(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, string>> toExcelFormat)
+        internal PropertyMapper(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, string>> toExcelFormat)
             : base(column, mapperType, columnHeader, SourceOperation.Read)
         {
             if (toExcelFormat == null)
@@ -126,7 +121,7 @@ namespace ExcelEntityMapper.Impl
         /// <param name="mapperType"></param>
         /// <param name="columnHeader"></param>
         /// <param name="toPropertyFormat"></param>
-        public PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat)
+        internal PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat)
             : base(column, mapperType, columnHeader, SourceOperation.Write)
         {
             if (toPropertyFormat == null)

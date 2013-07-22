@@ -14,6 +14,16 @@ namespace ExcelEntityMapper
         where TSource : class
     {
         /// <summary>
+        /// Executes the indicated action before setting instance values properties from worksheet assigned.
+        /// </summary>
+        Action<TSource> BeforeReading { get; set; }
+
+        /// <summary>
+        /// Executes the indicated action after setting instance values properties from worksheet assigned.
+        /// </summary>
+        Action<TSource> AfterReading { get; set; }
+
+        /// <summary>
         /// Reads all worksheet rows and transforms into objects.
         /// </summary>
         /// <param name="buffer">A buffer which will be contain all intances read from worksheet.</param>

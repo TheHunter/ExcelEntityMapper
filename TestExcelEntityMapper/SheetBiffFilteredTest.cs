@@ -38,7 +38,14 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be read a xls file.")]
         public void ReadObjectsTest1()
         {
-            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            //IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            XSheetFilteredMapper<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+
+            XSheetMapper<Person> ss = new XSheetMapper<Person>(1, this.PropertyMappersPerson);
+            //IXWorkBookProvider dd = ss;
+            //dd.WorkBook;
+
+
             sheet.SheetName = "Persons";
             sheet.BeforeReading = person => person.OwnCar = new Car();
 

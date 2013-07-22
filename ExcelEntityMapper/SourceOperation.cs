@@ -16,7 +16,7 @@ namespace ExcelEntityMapper
         Read,
         
         /// <summary>
-        /// Indicates the property mapper can be write by Excel cell value.
+        /// Indicates the property mapper can be written by Excel cell value.
         /// </summary>
         Write,
 

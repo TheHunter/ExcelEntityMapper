@@ -14,6 +14,16 @@ namespace ExcelEntityMapper
         where TSource : class
     {
         /// <summary>
+        /// Executes the indicated action before writing instance values properties into worksheet assigned.
+        /// </summary>
+        Action<TSource> BeforeWriting { get; set; }
+
+        /// <summary>
+        /// Executes the indicated action after writing instance values properties into worksheet assigned.
+        /// </summary>
+        Action<TSource> AfterWriting { get; set; }
+
+        /// <summary>
         /// Writes all objects into current worksheet rows.
         /// </summary>
         /// <param name="instances">Objects which be written into current worksheet rows.</param>

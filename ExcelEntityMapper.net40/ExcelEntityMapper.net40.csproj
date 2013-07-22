@@ -80,17 +80,29 @@
     <Compile Include="..\ExcelEntityMapper\Exceptions\WrongParameterException.cs">
       <Link>Exceptions\WrongParameterException.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\FactoryMapper.cs">
+      <Link>FactoryMapper.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetFilteredMapper.cs">
       <Link>Impl\BIFF\XSheetFilteredMapper.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetMapper.cs">
       <Link>Impl\BIFF\XSheetMapper.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetReader.cs">
+      <Link>Impl\BIFF\XSheetReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetWriter.cs">
+      <Link>Impl\BIFF\XSheetWriter.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XWorkBook.cs">
       <Link>Impl\BIFF\XWorkBook.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\ColumnProperty.cs">
       <Link>Impl\ColumnProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\MapperImplementor.cs">
+      <Link>Impl\MapperImplementor.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\PropertyMapper.cs">
       <Link>Impl\PropertyMapper.cs</Link>
@@ -101,11 +113,23 @@
     <Compile Include="..\ExcelEntityMapper\Impl\SheetMapper.cs">
       <Link>Impl\SheetMapper.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\SheetReader.cs">
+      <Link>Impl\SheetReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\SheetWriter.cs">
+      <Link>Impl\SheetWriter.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetFilteredMapper.cs">
       <Link>Impl\Xml\XLSheetFilteredMapper.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetMapper.cs">
       <Link>Impl\Xml\XLSheetMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetReader.cs">
+      <Link>Impl\Xml\XLSheetReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetWriter.cs">
+      <Link>Impl\Xml\XLSheetWriter.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLWorkBook.cs">
       <Link>Impl\Xml\XLWorkBook.cs</Link>
@@ -142,6 +166,9 @@
     </Compile>
     <Compile Include="..\ExcelEntityMapper\IXLWorkBook.cs">
       <Link>IXLWorkBook.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXWorkBookProvider.cs">
+      <Link>IXWorkBookProvider.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\MapperType.cs">
       <Link>MapperType.cs</Link>

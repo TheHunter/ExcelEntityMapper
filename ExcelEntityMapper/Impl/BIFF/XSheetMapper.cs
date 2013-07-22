@@ -12,7 +12,7 @@ namespace ExcelEntityMapper.Impl.BIFF
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XSheetMapper<TSource>
-        : SheetMapper<TSource>, IXLSheetWorker<TSource>
+        : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXWorkBookProvider<TSource>
         where TSource : class, new()
     {
         private HSSFWorkbook workBook;
@@ -34,7 +34,14 @@ namespace ExcelEntityMapper.Impl.BIFF
         public XSheetMapper(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
             : base(headerRows, true, propertyMappers)
         {
-            //this.LastColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Max() - this.Offset;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
+        {
+            get { return workBook; }
         }
 
         /// <summary>
