@@ -34,5 +34,15 @@ namespace ExcelEntityMapper
         /// Indicates the numbr of rows which is composed the header.
         /// </summary>
         int HeaderRows { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool ZeroBase { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int Offset { get; }
     }
 }

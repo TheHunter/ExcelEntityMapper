@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NPOI.HSSF.UserModel;
 
 namespace ExcelEntityMapper.Impl.BIFF
 {
@@ -10,9 +11,11 @@ namespace ExcelEntityMapper.Impl.BIFF
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XSheetWriter<TSource>
-        : SheetWriter<TSource>
+        : SheetWriter<TSource>, IXWorkBookProvider
         where TSource : class
     {
+        private HSSFWorkbook workBook;
+
         /// <summary>
         /// 
         /// </summary>
@@ -23,6 +26,11 @@ namespace ExcelEntityMapper.Impl.BIFF
             : base(headerRows, zeroBase, propertyMappers)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        HSSFWorkbook IXWorkBookProvider.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 

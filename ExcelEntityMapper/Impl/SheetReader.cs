@@ -12,7 +12,7 @@ namespace ExcelEntityMapper.Impl
     /// <typeparam name="TSource"></typeparam>
     public abstract class SheetReader<TSource>
         : SheetBase, IXLSheetReader<TSource>
-        where TSource : class
+        where TSource : class, new()
     {
         private readonly List<IXLPropertyMapper<TSource>> propertyMappers = new List<IXLPropertyMapper<TSource>>();
 

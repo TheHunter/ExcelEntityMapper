@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NPOI.HSSF.UserModel;
 
 namespace ExcelEntityMapper.Impl.BIFF
 {
@@ -10,9 +11,11 @@ namespace ExcelEntityMapper.Impl.BIFF
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XSheetReader<TSource>
-        : SheetReader<TSource>
-        where TSource : class
+        : SheetReader<TSource>, IXWorkBookReader<TSource>
+        where TSource : class, new()
     {
+        private HSSFWorkbook workBook;
+
         /// <summary>
         /// 
         /// </summary>
@@ -27,12 +30,17 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
+        HSSFWorkbook IXWorkBookProvider.WorkBook { get { return this.workBook; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
         public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
-            throw new NotImplementedException();
+            return this.ReadObjects<TSource>(sheetName, buffer);
         }
     }
 }

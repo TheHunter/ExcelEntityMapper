@@ -12,7 +12,7 @@ namespace ExcelEntityMapper.Impl.BIFF
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XSheetMapper<TSource>
-        : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXWorkBookProvider<TSource>
+        : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXWorkBookReader<TSource>, IXWorkBookWriter<TSource>
         where TSource : class, new()
     {
         private HSSFWorkbook workBook;
@@ -39,7 +39,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
+        HSSFWorkbook IXWorkBookProvider.WorkBook
         {
             get { return workBook; }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel;
 
 namespace ExcelEntityMapper.Impl.Xml
 {
@@ -9,9 +10,11 @@ namespace ExcelEntityMapper.Impl.Xml
     /// 
     /// </summary>
     public class XLSheetWriter<TSource>
-        : SheetWriter<TSource>
+        : SheetWriter<TSource>, IXLWorkBookProvider
         where TSource : class
     {
+        private XLWorkbook workBook;
+
         /// <summary>
         /// 
         /// </summary>
@@ -22,6 +25,11 @@ namespace ExcelEntityMapper.Impl.Xml
             : base(headerRows, zeroBase, propertyMappers)
         {
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        XLWorkbook IXLWorkBookProvider.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 

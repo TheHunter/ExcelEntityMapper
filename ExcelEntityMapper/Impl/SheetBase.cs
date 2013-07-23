@@ -120,7 +120,7 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
-        protected int Offset
+        public int Offset
         {
             get { return this.offset; }
         }

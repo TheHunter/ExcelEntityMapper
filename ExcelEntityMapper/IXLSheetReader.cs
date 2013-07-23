@@ -11,7 +11,7 @@ namespace ExcelEntityMapper
     /// <typeparam name="TSource">The source type which be used for transforming worksheet rows.</typeparam>
     public interface IXLSheetReader<TSource>
         : IXLSheetMapper<TSource>
-        where TSource : class
+        where TSource : class, new()
     {
         /// <summary>
         /// Executes the indicated action before setting instance values properties from worksheet assigned.

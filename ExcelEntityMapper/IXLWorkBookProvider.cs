@@ -2,21 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel;
 using NPOI.HSSF.UserModel;
 
 namespace ExcelEntityMapper
 {
+
     /// <summary>
     /// 
     /// </summary>
-    interface IXWorkBookProvider<TSource>
-        where TSource : class
+    interface IXWorkBookProvider
     {
         /// <summary>
         /// 
         /// </summary>
         HSSFWorkbook WorkBook { get; }
-
-        IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers { get; };
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IXLWorkBookProvider
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        XLWorkbook WorkBook { get; }
+    }
+
+    
 }

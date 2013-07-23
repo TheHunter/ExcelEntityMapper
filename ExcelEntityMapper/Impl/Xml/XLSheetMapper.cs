@@ -11,7 +11,7 @@ namespace ExcelEntityMapper.Impl.Xml
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XLSheetMapper<TSource>
-        : SheetMapper<TSource>, IXLSheetWorker<TSource>
+        : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXLWorkBookReader<TSource>, IXLWorkBookWriter<TSource>
         where TSource : class, new()
     {
         private XLWorkbook workBook;
@@ -33,6 +33,14 @@ namespace ExcelEntityMapper.Impl.Xml
         public XLSheetMapper(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
             : base(headerRows, false, propertyMappers)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        XLWorkbook IXLWorkBookProvider.WorkBook
+        {
+            get { return this.workBook; }
         }
 
         /// <summary>

@@ -167,8 +167,14 @@
     <Compile Include="..\ExcelEntityMapper\IXLWorkBook.cs">
       <Link>IXLWorkBook.cs</Link>
     </Compile>
-    <Compile Include="..\ExcelEntityMapper\IXWorkBookProvider.cs">
-      <Link>IXWorkBookProvider.cs</Link>
+    <Compile Include="..\ExcelEntityMapper\IXLWorkBookProvider.cs">
+      <Link>IXLWorkBookProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXWorkBookReader.cs">
+      <Link>IXWorkBookReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\IXWorkBookWriter.cs">
+      <Link>IXWorkBookWriter.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\MapperType.cs">
       <Link>MapperType.cs</Link>
