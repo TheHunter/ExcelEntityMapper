@@ -30,7 +30,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider.WorkBook { get { return this.workBook; } }
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns></returns>
         public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
-            return this.ReadObjects<TSource>(sheetName, buffer);
+            return this.ReadObjects<TSource>(sheetName, buffer);   
         }
     }
 }

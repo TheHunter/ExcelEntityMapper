@@ -12,7 +12,7 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     interface IXWorkBookWriter<TSource>
-        : IXLSheetWriter<TSource>, IXWorkBookProvider
+        : IXLSheetWriter<TSource>, IXWorkBookProvider<TSource>
         where TSource : class
     {
     }
@@ -22,7 +22,7 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     interface IXLWorkBookWriter<TSource>
-        : IXLSheetWriter<TSource>, IXLWorkBookProvider
+        : IXLSheetWriter<TSource>, IXLWorkBookProvider<TSource>
         where TSource : class
     {
     }

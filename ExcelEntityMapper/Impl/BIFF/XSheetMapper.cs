@@ -36,10 +36,8 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        HSSFWorkbook IXWorkBookProvider.WorkBook
+
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
         {
             get { return workBook; }
         }

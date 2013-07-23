@@ -38,7 +38,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider.WorkBook
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook
         {
             get { return this.workBook; }
         }

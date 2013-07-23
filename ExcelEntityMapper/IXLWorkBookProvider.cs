@@ -11,7 +11,9 @@ namespace ExcelEntityMapper
     /// <summary>
     /// 
     /// </summary>
-    interface IXWorkBookProvider
+    interface IXWorkBookProvider<TSource>
+        : IXLSheetMapper<TSource>
+        where TSource : class
     {
         /// <summary>
         /// 
@@ -22,7 +24,9 @@ namespace ExcelEntityMapper
     /// <summary>
     /// 
     /// </summary>
-    public interface IXLWorkBookProvider
+    internal interface IXLWorkBookProvider<TSource>
+        : IXLSheetMapper<TSource>
+        where TSource : class
     {
         /// <summary>
         /// 

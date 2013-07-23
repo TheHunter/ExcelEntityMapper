@@ -10,7 +10,7 @@ namespace ExcelEntityMapper.Impl.Xml
     /// 
     /// </summary>
     public class XLSheetWriter<TSource>
-        : SheetWriter<TSource>, IXLWorkBookProvider
+        : SheetWriter<TSource>, IXLWorkBookWriter<TSource>
         where TSource : class
     {
         private XLWorkbook workBook;
@@ -29,7 +29,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider.WorkBook { get { return this.workBook; } }
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 
@@ -39,7 +39,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
-            throw new NotImplementedException();
+            return this.WriteObjects<TSource>(sheetName, instances);
         }
     }
 }

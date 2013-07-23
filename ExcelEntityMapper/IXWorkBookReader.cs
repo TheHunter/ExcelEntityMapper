@@ -11,7 +11,7 @@ namespace ExcelEntityMapper
     /// 
     /// </summary>
     interface IXWorkBookReader<TSource>
-        : IXLSheetReader<TSource>, IXWorkBookProvider
+        : IXLSheetReader<TSource>, IXWorkBookProvider<TSource>
         where TSource : class, new()
     {
     }
@@ -21,7 +21,7 @@ namespace ExcelEntityMapper
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     interface IXLWorkBookReader<TSource>
-        : IXLSheetReader<TSource>, IXLWorkBookProvider
+        : IXLSheetReader<TSource>, IXLWorkBookProvider<TSource>
         where TSource : class, new()
     {
     }

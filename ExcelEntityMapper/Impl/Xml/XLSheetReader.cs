@@ -11,7 +11,7 @@ namespace ExcelEntityMapper.Impl.Xml
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XLSheetReader<TSource>
-        : SheetReader<TSource>, IXLWorkBookProvider
+        : SheetReader<TSource>, IXLWorkBookReader<TSource>
         where TSource : class, new()
     {
         private XLWorkbook workBook;
@@ -30,7 +30,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider.WorkBook { get { return this.workBook; } }
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
-            throw new NotImplementedException();
+            return this.ReadObjects<TSource>(sheetName, buffer);
         }
     }
 }

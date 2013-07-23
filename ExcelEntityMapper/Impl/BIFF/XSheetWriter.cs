@@ -11,7 +11,7 @@ namespace ExcelEntityMapper.Impl.BIFF
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public class XSheetWriter<TSource>
-        : SheetWriter<TSource>, IXWorkBookProvider
+        : SheetWriter<TSource>, IXWorkBookWriter<TSource>
         where TSource : class
     {
         private HSSFWorkbook workBook;
@@ -30,7 +30,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider.WorkBook { get { return this.workBook; } }
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns></returns>
         public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
-            throw new NotImplementedException();
+            return this.WriteObjects<TSource>(sheetName, instances);
         }
     }
 }
