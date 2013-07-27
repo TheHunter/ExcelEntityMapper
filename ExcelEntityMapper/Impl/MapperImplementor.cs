@@ -5,6 +5,7 @@ using System.Text;
 using ClosedXML.Excel;
 using ExcelEntityMapper.Exceptions;
 using ExcelEntityMapper.Impl.BIFF;
+using ExcelEntityMapper.Impl.Xml;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
@@ -13,7 +14,7 @@ namespace ExcelEntityMapper.Impl
     /// <summary>
     /// Extension class for sheet mappers.
     /// </summary>
-    internal static class MapperImplementor
+    public static class MapperImplementor
     {
         
         #region BIFF sheet implementation
@@ -33,7 +34,7 @@ namespace ExcelEntityMapper.Impl
             HSSFWorkbook workBook = wbReader.WorkBook;
 
             if (workBook == null)
-                throw new UnReadableSheetException("The current workbook to use cannot be null.");
+                throw new UnReadableSheetException("The current WorkBook to use cannot be null.");
 
             ISheet workSheet = wbReader.GetWorkSheet(sheetName);
 
@@ -122,7 +123,7 @@ namespace ExcelEntityMapper.Impl
             HSSFWorkbook workBook = wbWriter.WorkBook;
 
             if (workBook == null)
-                throw new UnWriteableSheetException("The current workbook to use cannot be null.");
+                throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
 
             ISheet workSheet = wbWriter.GetWorkSheet(sheetName);
 
@@ -148,10 +149,7 @@ namespace ExcelEntityMapper.Impl
                 foreach (var current in instances)
                 {
                     rowIndex++;
-                    IRow row = workSheet.GetRow(rowIndex);
-
-                    if (row == null)
-                        row = workSheet.CreateRow(rowIndex);
+                    IRow row = workSheet.GetRow(rowIndex) ?? workSheet.CreateRow(rowIndex);
 
                     if (wbWriter.WriteInstance(row, current))
                     {
@@ -290,7 +288,7 @@ namespace ExcelEntityMapper.Impl
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbReader"></param>
+        /// <param name="wbProvider"></param>
         /// <param name="sheetname"></param>
         /// <returns></returns>
         private static ISheet GetWorkSheet<TSource>(this IXWorkBookProvider<TSource> wbProvider, string sheetname)
@@ -332,6 +330,31 @@ namespace ExcelEntityMapper.Impl
             return last;
 
         }
+
+        #endregion
+
+        #region Other
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="workbook"></param>
+        /// <exception cref="SheetParameterException"></exception>
+        /// <exception cref="WorkBookException"></exception>
+        internal static void InjectWorkBook<TSource>(this IXWorkBookProvider<TSource> wbProvider, IXLWorkBook workbook)
+            where TSource : class
+        {
+            if (workbook == null)
+                throw new WorkBookException("Impossible to associate a null WorkBook.");
+
+            XWorkBook current = workbook as XWorkBook;
+            if (current == null)
+                throw new SheetParameterException("The WorkBook instance isn't valid format.", "WorkBook");
+
+            wbProvider.WorkBook = current.WorkBook;
+        }
         #endregion
 
         #endregion
@@ -352,7 +375,7 @@ namespace ExcelEntityMapper.Impl
             where TSource : class, new()
         {
             if (wbReader.WorkBook == null)
-                throw new UnReadableSheetException("The current workbook to use cannot be null.");
+                throw new UnReadableSheetException("The current WorkBook to use cannot be null.");
 
             IXLWorksheet workSheet = wbReader.GetWorkSheet(sheetName);
             IXLRow row = wbReader.GetFirstRow(workSheet);
@@ -438,7 +461,7 @@ namespace ExcelEntityMapper.Impl
             where TSource : class
         {
             if (wbWriter.WorkBook == null)
-                throw new UnWriteableSheetException("The current workbook to use cannot be null.");
+                throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
 
             IXLWorksheet workSheet = wbWriter.GetWorkSheet(sheetName);
 
@@ -573,9 +596,9 @@ namespace ExcelEntityMapper.Impl
             IXLRow firstRow = null;
             IXLRow lastRow = workSheet.LastRowUsed();
 
+            int firstIndex = 1;
             if (lastRow != null)
             {
-                int firstIndex = 1;
                 int lastIndex = lastRow.RowNumber();
 
                 for (int index = firstIndex; index <= lastIndex; index++)
@@ -641,7 +664,133 @@ namespace ExcelEntityMapper.Impl
         }
         #endregion
 
+        #region Other
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="workbook"></param>
+        /// <exception cref="SheetParameterException"></exception>
+        /// <exception cref="WorkBookException"></exception>
+        internal static void InjectWorkBook<TSource>(this IXLWorkBookProvider<TSource> wbProvider, IXLWorkBook workbook)
+            where TSource : class
+        {
+            if (workbook == null)
+                throw new WorkBookException("Impossible to associate a null WorkBook.");
+
+            XLWorkBook current = workbook as XLWorkBook;
+            if (current == null)
+                throw new SheetParameterException("The WorkBook instance isn't valid format.", "WorkBook");
+
+            wbProvider.WorkBook = current.WorkBook;
+        }
         #endregion
-        
+
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetMapper"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="buffer"></param>
+        /// <param name="function"></param>
+        /// <returns></returns>
+        internal static int ReadFilteredObjects<TSource>(this IXLSheetFiltered<TSource> sheetMapper, string sheetName, IDictionary<int, TSource> buffer,
+                                                Func<TSource, bool> function)
+             where TSource : class, new()
+        {
+            if (buffer == null)
+                throw new SheetParameterException("Buffer cannot be null.", "buffer");
+
+            Dictionary<int, TSource> temp = new Dictionary<int, TSource>();
+            int count = sheetMapper.ReadObjects(sheetName, temp);
+
+            var filtered = temp.Where(n => function(n.Value));
+
+            if (filtered.Any())
+            {
+                foreach (var current in filtered)
+                {
+                    buffer.Add(current);
+                }
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        public static IXLSheetWorker<TSource> AsXmlSheetWorker<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XLSheetMapper<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        /// <returns></returns>
+        public static IXLSheetMapper<TSource> AsBiffSheetWorker<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XSheetMapper<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        /// <returns></returns>
+        public static IXLSheetReader<TSource> AsXmlReader<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XLSheetReader<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        /// <returns></returns>
+        public static IXLSheetReader<TSource> AsBiffReader<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XSheetReader<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        /// <returns></returns>
+        public static IXLSheetWriter<TSource> AsXmlWriter<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XLSheetWriter<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sheetWorker"></param>
+        /// <returns></returns>
+        public static IXLSheetWriter<TSource> AsBiffWriter<TSource>(this IXLSheetWorker<TSource> sheetWorker)
+            where TSource : class, new()
+        {
+            return new XSheetWriter<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
+        }
     }
 }

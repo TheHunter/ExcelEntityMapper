@@ -33,7 +33,7 @@ namespace ExcelEntityMapper.Impl
                 throw new SheetParameterException("The SheetMapper must have at least a key PropertyMapper.", "propertyMappers");
 
             if (propertyMappers.Any(n => n.OperationEnabled == SourceOperation.Read))
-                throw new SheetParameterException("The current sheet writer must have no readable property mappers.", "propertyMappers");
+                throw new SheetParameterException("The current sheet reader must have no readable property mappers.", "propertyMappers");
 
             var group = propertyMappers
                 .GroupBy(n => n.ColumnIndex)
@@ -49,6 +49,9 @@ namespace ExcelEntityMapper.Impl
             this.FirstColumn = this.PropertyMappers.Select(n => n.ColumnIndex).Min();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public IEnumerable<IXLPropertyMapper<TSource>> PropertyMappers
         {
             get { return propertyMappers; }
@@ -89,5 +92,10 @@ namespace ExcelEntityMapper.Impl
         /// <returns></returns>
         public abstract int ReadObjects(string sheetName, IDictionary<int, TSource> buffer);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workbook"></param>
+        public abstract void InjectWorkBook(IXLWorkBook workbook);
     }
 }

@@ -14,11 +14,5 @@ namespace ExcelEntityMapper
         : IXLSheetReader<TSource>, IXLSheetWriter<TSource>
         where TSource : class, new()
     {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="workbook"></param>
-        void InjectWorkBook(IXLWorkBook workbook);
     }
 }

@@ -83,6 +83,9 @@
     <Compile Include="..\ExcelEntityMapper\FactoryMapper.cs">
       <Link>FactoryMapper.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\IBiffWorkBook.cs">
+      <Link>Impl\BIFF\IBiffWorkBook.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\XSheetFilteredMapper.cs">
       <Link>Impl\BIFF\XSheetFilteredMapper.cs</Link>
     </Compile>
@@ -118,6 +121,9 @@
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\SheetWriter.cs">
       <Link>Impl\SheetWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\Xml\IXmlWorkBook.cs">
+      <Link>Impl\Xml\IXmlWorkBook.cs</Link>
     </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\Xml\XLSheetFilteredMapper.cs">
       <Link>Impl\Xml\XLSheetFilteredMapper.cs</Link>

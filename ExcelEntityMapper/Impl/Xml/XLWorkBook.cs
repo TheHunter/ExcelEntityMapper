@@ -13,14 +13,14 @@ namespace ExcelEntityMapper.Impl.Xml
     public class XLWorkBook
         : IXLWorkBook
     {
-        private readonly XLWorkbook workbook;
+        private readonly XLWorkbook workBook;
 
         /// <summary>
         /// 
         /// </summary>
         public XLWorkBook()
         {
-            workbook = new XLWorkbook();
+            workBook = new XLWorkbook();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ExcelEntityMapper.Impl.Xml
         {
             try
             {
-                workbook = new XLWorkbook(new MemoryStream(inputStream)); ;
+                workBook = new XLWorkbook(new MemoryStream(inputStream));
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace ExcelEntityMapper.Impl.Xml
         {
             try
             {
-                workbook = new XLWorkbook(inputStream);
+                workBook = new XLWorkbook(inputStream);
             }
             catch (Exception ex)
             {
@@ -58,11 +58,20 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="workBook"></param>
+        public XLWorkBook(XLWorkbook workBook)
+        {
+            this.workBook = workBook;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="sheetName"></param>
         /// <returns></returns>
         public bool ExistsWorkSheet(string sheetName)
         {
-            return this.workbook.Worksheets.Count(n => n.Name == sheetName) > 0;
+            return this.workBook.Worksheets.Count(n => n.Name == sheetName) > 0;
         }
         
         /// <summary>
@@ -71,15 +80,15 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public IEnumerable<string> GetSheetNames()
         {
-            return this.workbook.Worksheets.Select(n => n.Name);
+            return this.workBook.Worksheets.Select(n => n.Name);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        internal XLWorkbook Workbook
+        internal XLWorkbook WorkBook
         {
-            get { return this.workbook; }
+            get { return this.workBook; }
         }
 
         /// <summary>
@@ -91,7 +100,7 @@ namespace ExcelEntityMapper.Impl.Xml
         {
             if (!this.ExistsWorkSheet(sheetName))
             {
-                this.workbook.AddWorksheet(sheetName);
+                this.workBook.AddWorksheet(sheetName);
                 return true;
             }
             return false;
@@ -104,8 +113,16 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public bool RemoveSheet(string sheetName)
         {
-            this.workbook.Worksheets.Delete(sheetName);
+            this.workBook.Worksheets.Delete(sheetName);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ExcelFormat Format
+        {
+            get { return ExcelFormat.XML; }
         }
 
         /// <summary>
@@ -114,8 +131,23 @@ namespace ExcelEntityMapper.Impl.Xml
         public Stream Save()
         {
             MemoryStream stream = new MemoryStream();
-            this.workbook.SaveAs(stream);
+            this.workBook.SaveAs(stream);
             return stream;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="propertyMappers"></param>
+        /// <returns></returns>
+        public IXLSheetWorker<TSource> MakeSheetMapper<TSource>(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            where TSource : class, new()
+        {
+            var mapper = new XLSheetMapper<TSource>(propertyMappers);
+            IXLWorkBookProvider<TSource> a = mapper;
+            a.WorkBook = this.WorkBook;
+            return mapper;
         }
     }
 }

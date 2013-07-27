@@ -91,5 +91,11 @@ namespace ExcelEntityMapper.Impl
                 this.propertyMappers.AddRange(value);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workbook"></param>
+        public abstract void InjectWorkBook(IXLWorkBook workbook);
     }
 }

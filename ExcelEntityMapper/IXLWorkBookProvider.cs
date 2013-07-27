@@ -11,14 +11,14 @@ namespace ExcelEntityMapper
     /// <summary>
     /// 
     /// </summary>
-    interface IXWorkBookProvider<TSource>
+    internal interface IXWorkBookProvider<TSource>
         : IXLSheetMapper<TSource>
         where TSource : class
     {
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook WorkBook { get; }
+        HSSFWorkbook WorkBook { get; set; }
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace ExcelEntityMapper
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook WorkBook { get; }
+        XLWorkbook WorkBook { get; set; }
     }
 
     

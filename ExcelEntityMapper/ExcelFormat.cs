@@ -11,11 +11,11 @@ namespace ExcelEntityMapper
     public enum ExcelFormat
     {
         /// <summary>
-        /// An old workbook format.
+        /// An old workbook format (ex. file *.xls).
         /// </summary>
         BIFF,
         /// <summary>
-        /// A new workbook format.
+        /// A new workbook format (ex. file *.xlsx).
         /// </summary>
         XML
     }

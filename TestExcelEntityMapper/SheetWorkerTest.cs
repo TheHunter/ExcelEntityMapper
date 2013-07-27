@@ -11,7 +11,7 @@ using TestExcelEntityMapper.Domain;
 namespace ExcelEntityMapperTest
 {
     [TestFixture]
-    public abstract class SheetFilteredTest
+    public abstract class SheetWorkerTest
     {
         private IEnumerable<IXLPropertyMapper<Person>> propertyMappersPerson;
         private string outputPath;

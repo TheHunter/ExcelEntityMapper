@@ -87,6 +87,12 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="workbook"></param>
+        public abstract void InjectWorkBook(IXLWorkBook workbook);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
         public int ReadObjects(IDictionary<int, TSource> buffer)

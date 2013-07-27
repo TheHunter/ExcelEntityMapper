@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NPOI.HSSF.UserModel;
 
+
 namespace ExcelEntityMapper.Impl.BIFF
 {
     /// <summary>
@@ -19,18 +20,30 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="headerRows"></param>
-        /// <param name="zeroBase"></param>
         /// <param name="propertyMappers"></param>
-        public XSheetWriter(int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(headerRows, zeroBase, propertyMappers)
+        public XSheetWriter(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : this(0, propertyMappers)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
+        /// <param name="headerRows"></param>
+        /// <param name="propertyMappers"></param>
+        public XSheetWriter(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(headerRows, true, propertyMappers)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
+        {
+            get { return this.workBook; }
+            set { this.workBook = value; }
+        }
 
         /// <summary>
         /// 
@@ -41,6 +54,15 @@ namespace ExcelEntityMapper.Impl.BIFF
         public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
             return this.WriteObjects<TSource>(sheetName, instances);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workbook"></param>
+        public override void InjectWorkBook(IXLWorkBook workbook)
+        {
+            this.InjectWorkBook<TSource>(workbook);
         }
     }
 }

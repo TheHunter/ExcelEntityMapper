@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ExcelEntityMapper;
+using ExcelEntityMapper.Exceptions;
+using ExcelEntityMapper.Impl;
 using ExcelEntityMapper.Impl.BIFF;
 using ExcelEntityMapper.Impl.Xml;
 using NUnit.Framework;
@@ -15,8 +17,8 @@ namespace ExcelEntityMapperTest
     /// <summary>
     /// 
     /// </summary>
-    public class SheetXmlFilteredTest
-        : SheetFilteredTest
+    public class SheetXmlWorkerTest
+        : SheetWorkerTest
     {
         private byte[] resourceXml;
         private byte[] emptyResourceXml;
@@ -45,14 +47,14 @@ namespace ExcelEntityMapperTest
             sheet.InjectWorkBook(workbook);
 
             Dictionary<int, Person> buffer = new Dictionary<int, Person>();
-            sheet.ReadObjects(buffer);
+            var counter = sheet.ReadObjects(buffer);
 
-            Assert.IsTrue(buffer.Any());
+            Assert.IsTrue(counter == 4);
         }
 
         [Test]
         [Category("ReaderXLSX")]
-        [Description("Reading a empty workbook without header.")]
+        [Description("Reading a empty worksheet without header.")]
         public void ReadObjectsTest2()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
@@ -64,15 +66,35 @@ namespace ExcelEntityMapperTest
             sheet.InjectWorkBook(workbook);
 
             Dictionary<int, Person> buffer = new Dictionary<int, Person>();
-            var count = sheet.ReadObjects(buffer); 
+            var counter = sheet.ReadObjects(buffer);
 
-            Assert.IsTrue(!buffer.Any() && count == 0);
+            Assert.IsTrue(!buffer.Any() && counter == 0);
         }
 
         [Test]
         [Category("ReaderXLSX")]
-        [Description("Reading a empty workbook with header.")]
+        [Description("Reading a empty worksheet with header.")]
         public void ReadObjectsTest3()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons3";
+            sheet.BeforeReading = n => n.OwnCar = new Car();
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+            workbook.AddSheet(sheet.SheetName);
+
+            sheet.InjectWorkBook(workbook);
+
+            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
+            var counter = sheet.ReadObjects(buffer);
+
+            Assert.IsTrue(!buffer.Any() && counter == 0);
+        }
+
+        [Test]
+        [Category("ReaderXLSX")]
+        [Description("Reading a worksheet with filter.")]
+        public void ReadFilteredObjects()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
@@ -84,20 +106,37 @@ namespace ExcelEntityMapperTest
             sheet.InjectWorkBook(workbook);
 
             Dictionary<int, Person> buffer = new Dictionary<int, Person>();
-            var count = sheet.ReadObjects(buffer);
+            sheet.ReadFilteredObjects(buffer, person => person.MarriedYear > 1999);
+            Assert.IsTrue(buffer.Count > 0);
+            buffer.Clear();
+            
+            sheet.ReadFilteredObjects(buffer, n => n.MarriedYear > 2000);
+            Assert.IsTrue(buffer.Count == 0);
         }
 
         [Test]
-        [Category("WriterXLSX")]
-        [Description("A test which demostrate how can be saved a new workbook with header of properties mapped.")]
-        public void WriteObjectsTest1()
+        [Category("WrongReadOperation")]
+        [Description("It throws an exception because SheetWorker wasn't injected the workbook to read.")]
+        [ExpectedException(typeof(UnReadableSheetException))]
+        public void ReadObjectsTest4()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
             sheet.BeforeReading = n => n.OwnCar = new Car();
 
+            sheet.ReadObjects(new Dictionary<int, Person>());
+        }
+
+        [Test]
+        [Category("WriterXLSX")]
+        [Description("A test which demostrate how can be saved a new worksheet with header of properties mapped.")]
+        public void WriteObjectsTest1()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            sheet.SheetName = "Persons";
+
             XLWorkBook workbook = new XLWorkBook();
-            workbook.AddSheet("Persons");
+            workbook.AddSheet(sheet.SheetName);
 
             sheet.InjectWorkBook(workbook);
 
@@ -109,12 +148,11 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("WriterXLSX")]
-        [Description("A test which demostrate how can be saved a new workbook without header of properties mapped.")]
+        [Description("A test which demostrate how can be saved a new worksheet without header of properties mapped.")]
         public void WriteObjectsTest2()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
-            sheet.BeforeReading = n => n.OwnCar = new Car();
 
             XLWorkBook workbook = new XLWorkBook();
             workbook.AddSheet("Persons");
@@ -129,19 +167,17 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("WriterXLSX")]
-        [Description("A test which demostrate how can be saved a new workbook with header of properties mapped, using a sheet with header.")]
+        [Description("A test which demostrate how can be saved a new worksheet with header of properties mapped.")]
         public void WriteObjectsTest3()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";
-            sheet.BeforeReading = n => n.OwnCar = new Car();
 
             IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
             workbook.AddSheet(sheet.SheetName);
 
             sheet.InjectWorkBook(workbook);
 
-            Dictionary<int, Person> buffer = new Dictionary<int, Person>();
             var count = sheet.WriteObjects(GetDefaultPersons());
 
             Assert.IsTrue(count > 0);
@@ -184,7 +220,67 @@ namespace ExcelEntityMapperTest
             Assert.IsTrue(carsWritten2 > 0);
 
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header3.xlsx"), workbook.Save());
+        }
 
+        [Test]
+        [Category("WrongWorkBook")]
+        [Description("Injecting a wrong WorkBook")]
+        [ExpectedException(typeof(WorkBookException))]
+        public void WrongWorkBookTest1()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            // null workbook is wrong argument
+            sheet.InjectWorkBook(null);
+        }
+
+        [Test]
+        [Category("WrongWorkBook")]
+        [Description("Injecting a wrong WorkBook")]
+        [ExpectedException(typeof(SheetParameterException))]
+        public void WrongWorkBookTest2()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            // Workbook instance must be compatible with the mapper to associate.
+            sheet.InjectWorkBook(new XWorkBook());
+        }
+
+        [Test]
+        [Category("SheetConverter")]
+        [Description("A SheetMapper which makes a new IXLSheetWorker into XML SheetMapper and Biff SheetMapper.")]
+        public void SheetMapperConverterTest()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
+            var sheetWorker1 = sheet.AsXmlSheetWorker();
+            Assert.IsNotNull(sheetWorker1);
+
+            var sheetWorker2 = sheet.AsBiffSheetWorker();
+            Assert.IsNotNull(sheetWorker2);
+        }
+
+        [Test]
+        [Category("SheetConverter")]
+        [Description("A SheetWriter which makes a new IXLSheetWorker into XML SheetReader and Biff SheetReader.")]
+        public void SheetWriterConverterTest()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
+            var sheetWorker1 = sheet.AsXmlReader();
+            Assert.IsNotNull(sheetWorker1);
+
+            var sheetWorker2 = sheet.AsBiffReader();
+            Assert.IsNotNull(sheetWorker2);
+        }
+
+        [Test]
+        [Category("SheetConverter")]
+        [Description("A SheetWriter which makes a new IXLSheetWorker into XML SheetReader and Biff SheetWriter.")]
+        public void SheetReaderConverterTest()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(0, this.PropertyMappersPerson);
+            var sheetWorker1 = sheet.AsXmlWriter();
+            Assert.IsNotNull(sheetWorker1);
+
+            var sheetWorker2 = sheet.AsBiffWriter();
+            Assert.IsNotNull(sheetWorker2);
         }
     }
 }

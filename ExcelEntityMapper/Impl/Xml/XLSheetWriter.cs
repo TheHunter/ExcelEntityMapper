@@ -18,18 +18,30 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="headerRows"></param>
-        /// <param name="zeroBase"></param>
         /// <param name="propertyMappers"></param>
-        public XLSheetWriter(int headerRows, bool zeroBase, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
-            : base(headerRows, zeroBase, propertyMappers)
+        public XLSheetWriter(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : this(0, propertyMappers)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook { get { return this.workBook; } }
+        /// <param name="headerRows"></param>
+        /// <param name="propertyMappers"></param>
+        public XLSheetWriter(int headerRows, IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            : base(headerRows, false, propertyMappers)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook
+        {
+            get { return this.workBook; }
+            set { this.workBook = value; }
+        }
 
         /// <summary>
         /// 
@@ -40,6 +52,15 @@ namespace ExcelEntityMapper.Impl.Xml
         public override int WriteObjects(string sheetName, IEnumerable<TSource> instances)
         {
             return this.WriteObjects<TSource>(sheetName, instances);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workbook"></param>
+        public override void InjectWorkBook(IXLWorkBook workbook)
+        {
+            this.InjectWorkBook<TSource>(workbook);
         }
     }
 }

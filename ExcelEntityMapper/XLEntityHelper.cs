@@ -53,7 +53,7 @@ namespace ExcelEntityMapper
             if (esito)
                 return result;
 
-            return (DateTime?)null;
+            return null;
         }
 
         /// <summary>
@@ -89,14 +89,18 @@ namespace ExcelEntityMapper
                 {
                     DateTime res;
                     if (DateTime.TryParseExact(input, DateFormats, DateTimeFormatInfo.CurrentInfo, DateTimeStyles.AssumeLocal, out res))
-                        return (TOutput)Convert.ChangeType(res, output);
+                    {
+                        var changeType = Convert.ChangeType(res, output);
+                        if (changeType != null) return (TOutput)changeType;
+                    }
                 }
                 else
                 {
-                    return (TOutput)Convert.ChangeType(input, output);
+                    var changeType = Convert.ChangeType(input, output);
+                    if (changeType != null) return (TOutput)changeType;
                 }
             }
-            return (TOutput?)null;
+            return null;
         }
 
         /// <summary>
@@ -137,17 +141,12 @@ namespace ExcelEntityMapper
                 bool providerNull = provider == null;
 
                 if (!isEmpty && provider != null)
-                {
                     return data.Value.ToString(format, provider);
-                }
-                else if (!isEmpty)
-                {
+
+                if (!isEmpty)
                     return data.Value.ToString(format);
-                }
-                else
-                {
-                    return data.Value.ToString(provider);
-                }
+
+                return data.Value.ToString(provider);
             }
             return null;
         }

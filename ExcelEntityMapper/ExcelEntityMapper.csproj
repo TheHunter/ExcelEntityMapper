@@ -66,6 +66,7 @@
     <Compile Include="Exceptions\UnWriteableSheetException.cs" />
     <Compile Include="Exceptions\WrongParameterException.cs" />
     <Compile Include="FactoryMapper.cs" />
+    <Compile Include="Impl\BIFF\IBiffWorkBook.cs" />
     <Compile Include="Impl\BIFF\XSheetReader.cs" />
     <Compile Include="Impl\BIFF\XSheetWriter.cs" />
     <Compile Include="Impl\ColumnProperty.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="IXLSheetWriter.cs" />
     <Compile Include="IXLWorkBook.cs" />
     <Compile Include="IXLWorkBookProvider.cs" />
+    <Compile Include="Impl\Xml\IXmlWorkBook.cs" />
     <Compile Include="IXWorkBookReader.cs" />
     <Compile Include="IXWorkBookWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,7 +107,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <None Include="FrameworkDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

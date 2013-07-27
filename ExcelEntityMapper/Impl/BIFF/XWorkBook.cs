@@ -8,19 +8,19 @@ using NPOI.HSSF.UserModel;
 namespace ExcelEntityMapper.Impl.BIFF
 {
     /// <summary>
-    /// An object class which manage a standard workbook of different formats.
+    /// An object class which manage a standard WorkBook of different formats.
     /// </summary>
     public class XWorkBook
         : IXLWorkBook
     {
-        private readonly HSSFWorkbook workbook;
+        private readonly HSSFWorkbook workBook;
 
         /// <summary>
         /// Instance a empty XWorkBook.
         /// </summary>
         public XWorkBook()
         {
-            workbook = new HSSFWorkbook();
+            workBook = new HSSFWorkbook();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
             try
             {
-                workbook = new HSSFWorkbook(new MemoryStream(inputStream));
+                workBook = new HSSFWorkbook(new MemoryStream(inputStream));
             }
             catch (Exception ex)
             {
@@ -47,12 +47,21 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
             try
             {
-                workbook = new HSSFWorkbook(inputStream);
+                workBook = new HSSFWorkbook(inputStream);
             }
             catch (Exception ex)
             {
                 throw new WorkBookException("Error on reading the stream input.", ex);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workBook"></param>
+        internal XWorkBook(HSSFWorkbook workBook)
+        {
+            this.workBook = workBook;
         }
 
         /// <summary>
@@ -62,19 +71,19 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns>return true if it exists the worksheet.</returns>
         public bool ExistsWorkSheet(string sheetName)
         {
-            return this.workbook.GetSheetIndex(sheetName) != -1;
+            return this.workBook.GetSheetIndex(sheetName) != -1;
         }
 
         /// <summary>
-        /// get all sheet names present into the calling workbook.
+        /// get all sheet names present into the calling WorkBook.
         /// </summary>
         /// <returns>return all sheet names.</returns>
         public IEnumerable<string> GetSheetNames()
         {
             List<string> names = new List<string>();
-            for (int i = 0; i < this.workbook.NumberOfSheets; i++)
+            for (int i = 0; i < this.workBook.NumberOfSheets; i++)
             {
-                names.Add(this.workbook.GetSheetName(i));
+                names.Add(this.workBook.GetSheetName(i));
             }
             return names;
         }
@@ -82,9 +91,9 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        internal HSSFWorkbook Workbook
+        internal HSSFWorkbook WorkBook
         {
-            get { return this.workbook; }
+            get { return this.workBook; }
         }
 
         /// <summary>
@@ -96,7 +105,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
             if (!this.ExistsWorkSheet(sheetName))
             {
-                this.workbook.CreateSheet(sheetName);
+                this.workBook.CreateSheet(sheetName);
                 return true;
             }
             return false;
@@ -111,21 +120,44 @@ namespace ExcelEntityMapper.Impl.BIFF
         {
             if (this.ExistsWorkSheet(sheetName))
             {
-                this.workbook.RemoveSheetAt(this.workbook.GetSheetIndex(sheetName));
+                this.workBook.RemoveSheetAt(this.workBook.GetSheetIndex(sheetName));
                 return true;
             }
             return false;
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public ExcelFormat Format
+        {
+            get { return ExcelFormat.BIFF; }
+        }
+
+        /// <summary>
         /// Saves the calling WorkBook into stream. 
         /// </summary>
-        /// <returns>return a stream wich contains the calling workbook.</returns>
+        /// <returns>return a stream wich contains the calling WorkBook.</returns>
         public Stream Save()
         {
             MemoryStream stream = new MemoryStream();
-            this.workbook.Write(stream);
+            this.workBook.Write(stream);
             return stream;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="propertyMappers"></param>
+        /// <returns></returns>
+        public IXLSheetWorker<TSource> MakeSheetMapper<TSource>(IEnumerable<IXLPropertyMapper<TSource>> propertyMappers)
+            where TSource : class, new()
+        {
+            var mapper = new XSheetMapper<TSource>(propertyMappers);
+            IXWorkBookProvider<TSource> a = mapper;
+            a.WorkBook = this.WorkBook;
+            return mapper;
         }
     }
 }

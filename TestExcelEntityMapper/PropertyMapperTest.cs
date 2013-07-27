@@ -33,7 +33,7 @@ namespace ExcelEntityMapperTest
             parameters.Add(new PropertyMapper<Person>(7, (instance, cellValue) => instance.OwnCar.Targa = cellValue, n => n.OwnCar.Targa));
             parameters.Add(new PropertyMapper<Person>(7, (instance, cellValue) => instance.OwnCar.BuildingYear = XLEntityHelper.ToPropertyFormat<int>(cellValue), n => XLEntityHelper.ToExcelFormat(n.OwnCar.BuildingYear)));
 
-            IXLSheetMapper<Person> mapper = new XLSheetMapper<Person>(parameters);
+            new XLSheetMapper<Person>(parameters);
         }
 
         [Test]
@@ -55,74 +55,35 @@ namespace ExcelEntityMapperTest
 
             Assert.IsTrue(parameters.Count() == parameters.Count(n => n.CustomType == MapperType.Simple));
 
-            IXLSheetMapper<Person> mapper = new XLSheetMapper<Person>(parameters);
+            new XLSheetMapper<Person>(parameters);
 
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        [ExpectedException(typeof(WrongParameterException))]
-        public void WrongPropertymapper()
-        {
-            var mapper = new PropertyMapper<Person>(0, MapperType.Key, (instance, cellvalue) => instance.Name = cellvalue, n => n.Name);
-        }
-
-
-        //[Test]
-        [Category("WrongMappers")]
-        [ExpectedException(typeof(WrongParameterException))]
-        public void WrongPropertymapper1()
-        {
-            //var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", n => n.Name);
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        [ExpectedException(typeof(WrongParameterException))]
-        public void WrongPropertymapper2()
-        {
-            //var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue);
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        [ExpectedException(typeof(WrongParameterException))]
-        public void WrongPropertymapper3()
-        {
-            //var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (Expression<Func<Person, string>>)null);
-            
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        [ExpectedException(typeof(WrongParameterException))]
-        public void WrongPropertymapper4()
-        {
-            //var mapper = new PropertyMapper<Person>(0, MapperType.Key, "Name", (Action<Person, string>)null);
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        public void Propertymapper1()
-        {
-            //var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", n => n.Name);
-            //Assert.AreEqual(mapper.OperationEnabled, SourceOperation.Read);
-        }
-
-        //[Test]
-        [Category("WrongMappers")]
-        public void Propertymapper2()
-        {
-            //var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue);
-            //Assert.AreEqual(mapper.OperationEnabled, SourceOperation.Write);
         }
 
         [Test]
         [Category("WrongMappers")]
-        public void Propertymapper3()
+        [ExpectedException(typeof(WrongParameterException))]
+        [Description("Column index cannot be less than zero.")]
+        public void WrongPropertymapper1()
         {
-            var mapper = new PropertyMapper<Person>(1, MapperType.Key, "Name", (instance, cellvalue) => instance.Name = cellvalue, person => person.Name);
-            Assert.AreEqual(mapper.OperationEnabled, SourceOperation.ReadWrite);
+            new PropertyMapper<Person>(0, MapperType.Key, (instance, cellvalue) => instance.Name = cellvalue, n => n.Name);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        [Description("Expression for getting source value cannot be nuul.")]
+        public void WrongPropertymapper2()
+        {
+            new PropertyMapper<Person>(1, MapperType.Key, (instance, cellvalue) => instance.Name = cellvalue, null);
+        }
+
+        [Test]
+        [Category("WrongMappers")]
+        [ExpectedException(typeof(WrongParameterException))]
+        [Description("Action which serves for setting property source cannot be null.")]
+        public void WrongPropertymapper3()
+        {
+            new PropertyMapper<Person>(1, MapperType.Key, null, n => n.Name);
         }
     }
 }

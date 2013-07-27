@@ -53,23 +53,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public int ReadFilteredObjects(string sheetName, IDictionary<int, TSource> buffer, Func<TSource, bool> function)
         {
-            if (buffer == null)
-                throw new SheetParameterException("Buffer cannot be null.", "buffer");
-
-            Dictionary<int, TSource> temp = new Dictionary<int, TSource>();
-            int count = this.ReadObjects(temp);
-
-            var filtered = temp.Where(n => function(n.Value));
-
-            if (filtered.Any())
-            {
-                foreach (var current in filtered)
-                {
-                    buffer.Add(current);
-                }
-            }
-
-            return count;
+            return this.ReadFilteredObjects<TSource>(sheetName, buffer, function);
         }
     }
 }
