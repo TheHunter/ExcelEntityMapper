@@ -16,6 +16,6 @@ namespace ExcelEntityMapper
         /// <summary>
         /// 
         /// </summary>
-        Func<TSource, string> ToExcelFormat { get; }
+        Func<TSource, object> ToExcelFormat { get; }
     }
 }

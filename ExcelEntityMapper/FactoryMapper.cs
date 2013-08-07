@@ -28,7 +28,7 @@ namespace ExcelEntityMapper
         /// <param name="columnHeader"></param>
         /// <param name="toExcelFormat"></param>
         /// <returns></returns>
-        public static IXLPropertyMapper<TSource> MakeReaderPropertyMap<TSource>(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, string>> toExcelFormat)
+        public static IXLPropertyMapper<TSource> MakeReaderPropertyMap<TSource>(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, object>> toExcelFormat)
             where TSource : class
         {
             return new PropertyMapper<TSource>(column, mapperType, columnHeader, toExcelFormat);

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using ExcelEntityMapper;
 using ExcelEntityMapper.Impl.BIFF;
 using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using NUnit.Framework;
 
 namespace ExcelEntityMapperTest
@@ -76,7 +79,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out2_.xls"), mem);
         }
 
-        //[Test]
+        [Test]
         [Category("Demo")]
         public void Test3()
         {
@@ -102,10 +105,21 @@ namespace ExcelEntityMapperTest
             row2.CreateCell(1).SetCellValue("r5:c2");
             row2.CreateCell(2).SetCellValue(DateTime.Now.ToString("dd/MM/yyyy"));
 
-            //var row3 = sheet.CreateRow(5);
-            //row2.CreateCell(0).SetCellValue("r5:c1..");
-            //row2.CreateCell(1).SetCellValue("r5:c2..");
-            //row2.CreateCell(2).SetCellValue(DateTime.Now.ToString("dd/MM/yyyy"));
+            // bool value
+            row2.CreateCell(3).SetCellValue(true);
+
+            // viene applicato la data corrente
+            row2.CreateCell(4).SetCellValue(DateTime.Now);
+
+            row2.CreateCell(5).SetCellValue(((byte)0));
+            row2.CreateCell(6).SetCellValue(((short)124));
+            row2.CreateCell(7).SetCellValue(((int)254));
+            row2.CreateCell(8).SetCellValue(1000L);
+            row2.CreateCell(9).SetCellValue(1000.454D);
+            row2.CreateCell(10).SetCellValue("ciao a tutti \r\n... seconda riga\r\n... terza riga");
+
+            ICell cella = row2.CreateCell(11);
+            //object value = XLEntityHelper.NormalizeXlsCellValue(DateTime.Now);
 
             var tst = sheet.GetRow(4);
             Assert.IsNull(tst);
@@ -134,6 +148,35 @@ namespace ExcelEntityMapperTest
 
 
             Assert.IsTrue(true);
+        }
+
+        [Test]
+        public void TestXlSTypes()
+        {
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(DateTime.Now).GetType(), typeof(string));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((DateTime?)DateTime.Now).GetType(), typeof(string));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(true).GetType(), typeof(string));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((bool?)true).GetType(), typeof(string));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(new StringBuilder()).GetType(), typeof(string));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((short)1).GetType(), typeof(short));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((short?)1).GetType(), typeof(short));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((byte)5).GetType(), typeof(byte));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((byte?)5).GetType(), typeof(byte));
+            
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(5).GetType(), typeof(int));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((int?)5).GetType(), typeof(int));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(5L).GetType(), typeof(long));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((long?)5L).GetType(), typeof(long));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(5D).GetType(), typeof(double));
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((double?)5D).GetType(), typeof(double));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(null).GetType(), typeof(string));
         }
 
         private static void WriteFileFromStream(string fileOutPut, Stream stream)

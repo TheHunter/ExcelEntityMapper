@@ -34,7 +34,7 @@
   <Class Name="ExcelEntityMapper.Impl.BIFF.XWorkBook">
     <Position X="37.75" Y="13.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAAAAAAAIAAAACAAAAA=</HashCode>
+      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAgAAAAAIAAAACAAAAA=</HashCode>
       <FileName>Impl\BIFF\XWorkBook.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -58,7 +58,7 @@
   <Class Name="ExcelEntityMapper.Impl.Xml.XLWorkBook">
     <Position X="40.75" Y="13.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAAAAAAAIAAAACAAAAA=</HashCode>
+      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAgAAAAAIAAAACAAAAA=</HashCode>
       <FileName>Impl\Xml\XLWorkBook.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -264,21 +264,13 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ExcelEntityMapper.IXLPropertyMapper&lt;TSource&gt;">
-    <Position X="46" Y="14.5" Width="1.5" />
+    <Position X="46" Y="14.25" Width="1.5" />
     <InheritanceLine Type="ExcelEntityMapper.IXLPropertyWriter&lt;TSource&gt;" ManuallyRouted="true">
       <Path>
-        <Point X="48.75" Y="12.983" />
-        <Point X="48.75" Y="13.872" />
+        <Point X="48.5" Y="12.983" />
+        <Point X="48.5" Y="13.872" />
         <Point X="46.75" Y="13.872" />
-        <Point X="46.75" Y="14.5" />
-      </Path>
-    </InheritanceLine>
-    <InheritanceLine Type="ExcelEntityMapper.IXLPropertyReader&lt;TSource&gt;" ManuallyRouted="true">
-      <Path>
-        <Point X="44.75" Y="12.983" />
-        <Point X="44.75" Y="13.883" />
-        <Point X="46.75" Y="13.883" />
-        <Point X="46.75" Y="14.5" />
+        <Point X="46.75" Y="14.25" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -293,15 +285,8 @@
       <FileName>IXLSheetMapper.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="ExcelEntityMapper.IXLPropertyReader&lt;TSource&gt;">
-    <Position X="44" Y="11.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
-      <FileName>IXLPropertyReader.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="ExcelEntityMapper.IXLPropertyWriter&lt;TSource&gt;">
-    <Position X="48" Y="11.75" Width="1.5" />
+    <Position X="47.75" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IXLPropertyWriter.cs</FileName>
@@ -317,7 +302,7 @@
   <Interface Name="ExcelEntityMapper.IXLWorkBook">
     <Position X="39.25" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <HashCode>AAAABIAAAAABAAAgCAAAAAAAAAgAAAAAAAAAACAAAAA=</HashCode>
       <FileName>IXLWorkBook.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -427,6 +412,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
       <FileName>Impl\BIFF\IBiffWorkBook.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ExcelEntityMapper.IXLPropertyReader&lt;TSource&gt;">
+    <Position X="44.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>IXLPropertyReader.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

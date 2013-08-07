@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Globalization;
+using NPOI.SS.UserModel;
 
 namespace ExcelEntityMapper
 {
@@ -13,6 +15,7 @@ namespace ExcelEntityMapper
     {
         private static readonly string[] DateFormats = { "dd/MM/yyyy", "dd/MM/yyyy hh:mm:ss" };
         private static readonly HashSet<Type> DateTypes = new HashSet<Type>();
+        private static readonly HashSet<Type> NumericTypes = new HashSet<Type>();
 
         /// <summary>
         /// 
@@ -21,6 +24,12 @@ namespace ExcelEntityMapper
         {
             DateTypes.Add(typeof(DateTime));
             DateTypes.Add(typeof(DateTime?));
+
+            NumericTypes.Add(typeof(byte));
+            NumericTypes.Add(typeof(short));
+            NumericTypes.Add(typeof(int));
+            NumericTypes.Add(typeof(long));
+            NumericTypes.Add(typeof(double));
         }
 
         /// <summary>
@@ -149,6 +158,42 @@ namespace ExcelEntityMapper
                 return data.Value.ToString(provider);
             }
             return null;
+        }
+
+
+        public static object NormalizeXlsCellValue(object value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            Type type = value.GetType();
+
+            if (type.GetInterfaces().Any(n => n.Name.StartsWith("Nullable`1")))
+            {
+                PropertyInfo property = type.GetProperty("Value");
+                object ret = property.GetValue(value, null);
+                return NormalizeXlsCellValue(value);
+            }
+
+            if (type == typeof(string) || IsNumericValue(type))
+                return value;
+
+            return value.ToString();
+
+        }
+
+        public static bool IsNumericValue(Type type)
+        {
+            if (type == null) return false;
+
+            return NumericTypes.Contains(type);
+        }
+
+        public static bool IsNumericValue(object value)
+        {
+            if (value == null) return false;
+
+            return IsNumericValue(value.GetType());
         }
     }
 }

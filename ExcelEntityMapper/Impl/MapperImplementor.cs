@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ClosedXML.Excel;
 using ExcelEntityMapper.Exceptions;
@@ -16,7 +17,16 @@ namespace ExcelEntityMapper.Impl
     /// </summary>
     public static class MapperImplementor
     {
-        
+        private static readonly MethodInfo XlsNumericSetter;
+        private static readonly MethodInfo XlsStringSetter;
+
+        static MapperImplementor()
+        {
+            //ICell cell = null;
+            XlsNumericSetter = typeof(ICell).GetMethod("SetCellValue", new Type[] { typeof(double) });
+            XlsStringSetter = typeof(ICell).GetMethod("SetCellValue", new Type[] { typeof(string) });
+        }
+
         #region BIFF sheet implementation
 
         #region Reader methods
@@ -91,7 +101,7 @@ namespace ExcelEntityMapper.Impl
                             {
                                 ICell cell = row.GetCell(parameter.ColumnIndex - wbReader.Offset);
                                 if (cell != null)
-                                    parameter.ToPropertyFormat(instance, cell.StringCellValue);
+                                    parameter.ToPropertyFormat(instance, cell.StringCellValue); //aggiungere la logica di distinguere la gestione del tipo di cella.
                             }
                             catch
                             {
@@ -212,7 +222,15 @@ namespace ExcelEntityMapper.Impl
                         try
                         {
                             ICell cell = row.CreateCell(parameter.ColumnIndex - wbWriter.Offset);
-                            cell.SetCellValue(parameter.ToExcelFormat(instance));
+                            object val = XLEntityHelper.NormalizeXlsCellValue(parameter.ToExcelFormat(instance));
+                            object[] parameters = { val };
+
+                            if (XLEntityHelper.IsNumericValue(val))
+                                XlsNumericSetter.Invoke(cell, parameters);
+                            else
+                                XlsStringSetter.Invoke(cell, parameters);
+                            
+                            //cell.SetCellValue(parameter.ToExcelFormat(instance));
                         }
                         catch (Exception)
                         {
@@ -220,7 +238,7 @@ namespace ExcelEntityMapper.Impl
                         }
                         return true;
                     }
-                    );
+                );
                 ret = true;
             }
 

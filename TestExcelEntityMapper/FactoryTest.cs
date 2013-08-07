@@ -46,7 +46,7 @@ namespace ExcelEntityMapperTest
         [ExpectedException(typeof(WrongParameterException))]
         public void WrongPropertymapper3()
         {
-            FactoryMapper.MakeReaderPropertyMap(1, MapperType.Key, "Name", (Expression<Func<Person, string>>)null);
+            FactoryMapper.MakeReaderPropertyMap(1, MapperType.Key, "Name", (Expression<Func<Person, object>>)null);
         }
 
         [Test]

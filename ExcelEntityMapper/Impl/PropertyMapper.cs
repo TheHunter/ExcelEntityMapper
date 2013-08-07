@@ -17,7 +17,7 @@ namespace ExcelEntityMapper.Impl
 		where TSource : class
 	{
 		private readonly Action<TSource, string> toPropertyFormat;
-		private readonly Func<TSource, string> toExcelFormat;
+		private readonly Func<TSource, object> toExcelFormat;
 
 		
 		/// <summary>
@@ -27,7 +27,7 @@ namespace ExcelEntityMapper.Impl
 		/// <param name="toPropertyFormat"></param>
 		/// <param name="toExcelFormat"></param>
 		public PropertyMapper(int column, Action<TSource, string> toPropertyFormat,
-							  Expression<Func<TSource, string>> toExcelFormat)
+							  Expression<Func<TSource, object>> toExcelFormat)
 			: this(
 				column, MapperType.Simple, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"),
 				toPropertyFormat, toExcelFormat)
@@ -42,7 +42,7 @@ namespace ExcelEntityMapper.Impl
 		/// <param name="toPropertyFormat"></param>
 		/// <param name="toExcelFormat"></param>
 		public PropertyMapper(int column, MapperType mapperType, Action<TSource, string> toPropertyFormat,
-							  Expression<Func<TSource, string>> toExcelFormat)
+							  Expression<Func<TSource, object>> toExcelFormat)
 			: this(
 				column, mapperType, SourceHelper.GetDefaultMemberName(toExcelFormat, "NoPropertyHeader"), toPropertyFormat,
 				toExcelFormat)
@@ -57,7 +57,7 @@ namespace ExcelEntityMapper.Impl
 		/// <param name="toPropertyFormat"></param>
 		/// <param name="toExcelFormat"></param>
 		public PropertyMapper(int column, string columnHeader,
-							  Action<TSource, string> toPropertyFormat, Expression<Func<TSource, string>> toExcelFormat)
+							  Action<TSource, string> toPropertyFormat, Expression<Func<TSource, object>> toExcelFormat)
 			:this(column, MapperType.Simple, columnHeader, toPropertyFormat, toExcelFormat)
 		{
 		}
@@ -72,7 +72,7 @@ namespace ExcelEntityMapper.Impl
 	    /// <param name="toExcelFormat"></param>
 	    /// <exception cref="WrongParameterException"></exception>
 	    public PropertyMapper(int column, MapperType mapperType, string columnHeader, Action<TSource, string> toPropertyFormat,
-							  Expression<Func<TSource, string>> toExcelFormat)
+							  Expression<Func<TSource, object>> toExcelFormat)
 			: this(column, mapperType, columnHeader, SourceOperation.ReadWrite)
 		{
 			
@@ -108,7 +108,7 @@ namespace ExcelEntityMapper.Impl
 	    /// <param name="columnHeader"></param>
 	    /// <param name="toExcelFormat"></param>
 	    /// <exception cref="WrongParameterException"></exception>
-	    internal PropertyMapper(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, string>> toExcelFormat)
+	    internal PropertyMapper(int column, MapperType mapperType, string columnHeader, Expression<Func<TSource, object>> toExcelFormat)
 			: base(column, mapperType, columnHeader, SourceOperation.Read)
 		{
 			if (toExcelFormat == null)
@@ -147,7 +147,7 @@ namespace ExcelEntityMapper.Impl
 		/// <summary>
 		/// 
 		/// </summary>
-		public Func<TSource, string> ToExcelFormat
+		public Func<TSource, object> ToExcelFormat
 		{
 			get { return this.toExcelFormat; }
 		}
