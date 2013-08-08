@@ -56,6 +56,26 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public int GetIndexFirstRow(string sheetName)
+        {
+            return this.GetIndexFirstRow<TSource>(sheetName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public override TSource ReadObject(string sheetName, int rowIndex)
+        {
+            return this.ReadObject<TSource>(sheetName, rowIndex);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>

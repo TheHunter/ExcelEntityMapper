@@ -50,17 +50,17 @@ namespace ExcelEntityMapper
         }
 
         /// <summary>
-        /// 
+        /// Makes a IXLWorkBook object from native array byte.
         /// </summary>
         /// <param name="inputStream"></param>
         /// <returns></returns>
         public static IXLWorkBook MakeWorkBook(byte[] inputStream)
         {
-            return FactoryMapper.ResolveWorkBook(inputStream);
+            return ResolveWorkBook(inputStream);
         }
 
         /// <summary>
-        /// 
+        /// Makes a IXLWorkBook object from native stream input file.
         /// </summary>
         /// <param name="inputStream"></param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace ExcelEntityMapper
         {
             byte[] input = new byte[inputStream.Length];
             inputStream.Read(input, 0, input.Length);
-            return FactoryMapper.ResolveWorkBook(input);
+            return ResolveWorkBook(input);
         }
 
         /// <summary>

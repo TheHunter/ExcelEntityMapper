@@ -160,7 +160,11 @@ namespace ExcelEntityMapper
             return null;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static object NormalizeXlsCellValue(object value)
         {
             if (value == null)
@@ -182,6 +186,11 @@ namespace ExcelEntityMapper
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static bool IsNumericValue(Type type)
         {
             if (type == null) return false;
@@ -189,6 +198,11 @@ namespace ExcelEntityMapper
             return NumericTypes.Contains(type);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static bool IsNumericValue(object value)
         {
             if (value == null) return false;

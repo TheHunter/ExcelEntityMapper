@@ -98,6 +98,35 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("ReaderXLS")]
+        [Description("Finding the row index of the first readable row.")]
+        public void FindFirstIndexRow()
+        {
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+            sheet.InjectWorkBook(workbook);
+
+            Assert.AreEqual(sheet.GetIndexFirstRow("Persons4"), -1);
+            Assert.AreEqual(sheet.GetIndexFirstRow("Persons"), 5);
+        }
+
+        [Test]
+        [Category("ReaderXLS")]
+        [Description("Finding the row index of the first readable row.")]
+        public void ReadRowOnIndex()
+        {
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+            sheet.InjectWorkBook(workbook);
+
+            //the return object must be validated because It could be initialized with wrongs values from worksheet source.
+            Assert.IsNotNull(sheet.ReadObject("Persons4", 1));
+            Assert.IsNotNull(sheet.ReadObject("Persons", 5));
+        }
+
+        [Test]
+        [Category("ReaderXLS")]
         [Description("Reading a worksheet with filter.")]
         public void ReadFilteredObjects()
         {
@@ -123,7 +152,7 @@ namespace ExcelEntityMapperTest
         [Category("WrongReadOperation")]
         [Description("It throws an exception because SheetWorker wasn't injected the workbook to read.")]
         [ExpectedException(typeof(UnReadableSheetException))]
-        public void ReadObjectsTest4()
+        public void WrongReadObjectsTest1()
         {
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";

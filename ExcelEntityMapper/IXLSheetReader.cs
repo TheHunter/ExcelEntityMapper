@@ -24,11 +24,33 @@ namespace ExcelEntityMapper
         Action<TSource> AfterReading { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        int GetIndexFirstRow(string sheetName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        TSource ReadObject(int rowIndex);
+
+        /// <summary>
         /// Reads all worksheet rows and transforms into objects.
         /// </summary>
         /// <param name="buffer">A buffer which will be contain all intances read from worksheet.</param>
         /// <returns>Returns the row number read from the current worksheet.</returns>
         int ReadObjects(IDictionary<int, TSource> buffer);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        TSource ReadObject(string sheetName, int rowIndex);
 
         /// <summary>
         /// Reads all worksheet rows and transforms into objects.

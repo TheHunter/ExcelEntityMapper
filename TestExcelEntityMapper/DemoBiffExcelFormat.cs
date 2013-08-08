@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace ExcelEntityMapperTest
 {
-    [TestFixture]
+    //[TestFixture]
     public sealed class DemoBiffExcelFormat
     {
         private byte[] resource;
@@ -33,7 +33,7 @@ namespace ExcelEntityMapperTest
             this.outputPath = null;
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test1()
         {
@@ -72,14 +72,12 @@ namespace ExcelEntityMapperTest
             names.Remove("Agencies");
             Assert.IsTrue(a.NumberOfSheets == 1);
 
-
-
             MemoryStream mem = new MemoryStream();
             a.Write(mem);
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out2_.xls"), mem);
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test3()
         {
@@ -136,21 +134,6 @@ namespace ExcelEntityMapperTest
         }
 
         //[Test]
-        [Category("Demo")]
-        public void Test4()
-        {
-            HSSFWorkbook a = new HSSFWorkbook(File.Open(@"C:\Users\Diego\AppData\Local\Temp\test_out3__.xls", FileMode.Open, FileAccess.ReadWrite));
-            var sheet = a.GetSheet("test2");
-
-            var firstrow = sheet.FirstRowNum;
-            var lastrow = sheet.LastRowNum;
-
-
-
-            Assert.IsTrue(true);
-        }
-
-        [Test]
         public void TestXlSTypes()
         {
             Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(DateTime.Now).GetType(), typeof(string));
@@ -178,6 +161,7 @@ namespace ExcelEntityMapperTest
 
             Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(null).GetType(), typeof(string));
         }
+
 
         private static void WriteFileFromStream(string fileOutPut, Stream stream)
         {

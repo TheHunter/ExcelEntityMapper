@@ -14,8 +14,6 @@ namespace ExcelEntityMapper.Impl.Xml
         : SheetReader<TSource>, IXLWorkBookReader<TSource>
         where TSource : class, new()
     {
-        private XLWorkbook workBook;
-
         /// <summary>
         /// 
         /// </summary>
@@ -38,10 +36,27 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public override int GetIndexFirstRow(string sheetName)
         {
-            get { return this.workBook; }
-            set { this.workBook = value; }
+            return this.GetIndexFirstRow<TSource>(sheetName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public override TSource ReadObject(string sheetName, int rowIndex)
+        {
+            return this.ReadObject<TSource>(sheetName, rowIndex);
         }
 
         /// <summary>

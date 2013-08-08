@@ -93,12 +93,30 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public TSource ReadObject(int rowIndex)
+        {
+            return this.ReadObject(this.SheetName, rowIndex);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
         public int ReadObjects(IDictionary<int, TSource> buffer)
         {
             return this.ReadObjects(this.SheetName, buffer);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public abstract TSource ReadObject(string sheetName, int rowIndex);
 
         /// <summary>
         /// 

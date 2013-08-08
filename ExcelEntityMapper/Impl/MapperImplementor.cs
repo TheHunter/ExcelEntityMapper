@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,14 +23,14 @@ namespace ExcelEntityMapper.Impl
 
         static MapperImplementor()
         {
-            //ICell cell = null;
-            XlsNumericSetter = typeof(ICell).GetMethod("SetCellValue", new Type[] { typeof(double) });
-            XlsStringSetter = typeof(ICell).GetMethod("SetCellValue", new Type[] { typeof(string) });
+            XlsNumericSetter = typeof(ICell).GetMethod("SetCellValue", new[] { typeof(double) });
+            XlsStringSetter = typeof(ICell).GetMethod("SetCellValue", new[] { typeof(string) });
         }
 
         #region BIFF sheet implementation
 
         #region Reader methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,13 +42,7 @@ namespace ExcelEntityMapper.Impl
         internal static int ReadObjects<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName, IDictionary<int, TSource> buffer)
             where TSource : class, new()
         {
-            HSSFWorkbook workBook = wbReader.WorkBook;
-
-            if (workBook == null)
-                throw new UnReadableSheetException("The current WorkBook to use cannot be null.");
-
             ISheet workSheet = wbReader.GetWorkSheet(sheetName);
-
             IRow row = wbReader.GetFirstRow(workSheet);
             int counter = 0;
 
@@ -80,6 +75,26 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="wbReader"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="indexRow"></param>
+        /// <returns></returns>
+        internal static TSource ReadObject<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName, int indexRow)
+            where TSource : class, new()
+        {
+            indexRow -= wbReader.Offset;
+
+            if (indexRow < 0)
+                throw new WrongParameterException(string.Format("The index row must be greater than zero, value: {0}", indexRow), "indexRow");
+
+            ISheet workSheet = wbReader.GetWorkSheet(sheetName);
+            return wbReader.ReadInstance(workSheet.GetRow(indexRow));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbReader"></param>
         /// <param name="row"></param>
         /// <returns></returns>
         private static TSource ReadInstance<TSource>(this IXWorkBookReader<TSource> wbReader, IRow row)
@@ -101,7 +116,11 @@ namespace ExcelEntityMapper.Impl
                             {
                                 ICell cell = row.GetCell(parameter.ColumnIndex - wbReader.Offset);
                                 if (cell != null)
-                                    parameter.ToPropertyFormat(instance, cell.StringCellValue); //aggiungere la logica di distinguere la gestione del tipo di cella.
+                                {
+                                    string cellValue = null;
+                                    cellValue = cell.CellType == CellType.NUMERIC ? cell.NumericCellValue.ToString(CultureInfo.InvariantCulture) : cell.StringCellValue;
+                                    parameter.ToPropertyFormat(instance, cellValue);
+                                }
                             }
                             catch
                             {
@@ -116,9 +135,11 @@ namespace ExcelEntityMapper.Impl
             }
             return instance;
         }
+        
         #endregion
 
         #region Writer methods
+
         /// <summary>
         /// 
         /// </summary>
@@ -130,10 +151,9 @@ namespace ExcelEntityMapper.Impl
         internal static int WriteObjects<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName, IEnumerable<TSource> instances)
             where TSource : class
         {
-            HSSFWorkbook workBook = wbWriter.WorkBook;
-
-            if (workBook == null)
-                throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
+            //HSSFWorkbook workBook = wbWriter.WorkBook;
+            //if (workBook == null)
+            //    throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
 
             ISheet workSheet = wbWriter.GetWorkSheet(sheetName);
 
@@ -141,7 +161,7 @@ namespace ExcelEntityMapper.Impl
             if (instances != null && instances.Any())
             {
                 int rowIndex = -1;
-                IRow lastRow = wbWriter.GetLastRow(workSheet); //
+                IRow lastRow = wbWriter.GetLastRow(workSheet);
 
                 if (wbWriter.HasHeader)
                 {
@@ -229,8 +249,6 @@ namespace ExcelEntityMapper.Impl
                                 XlsNumericSetter.Invoke(cell, parameters);
                             else
                                 XlsStringSetter.Invoke(cell, parameters);
-                            
-                            //cell.SetCellValue(parameter.ToExcelFormat(instance));
                         }
                         catch (Exception)
                         {
@@ -247,9 +265,35 @@ namespace ExcelEntityMapper.Impl
 
             return ret;
         }
+        
         #endregion
 
         #region Common methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbReader"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        internal static int GetIndexFirstRow<TSource>(this IXWorkBookProvider<TSource> wbReader, string sheetName)
+            where TSource : class
+        {
+            ISheet workSheet = wbReader.GetWorkSheet(sheetName);
+            IRow row = wbReader.GetFirstRow(workSheet);
+
+            if (row == null)
+                return -1;
+
+            int indexRow = row.RowNum;
+            if (wbReader.HasHeader)
+                indexRow += wbReader.HeaderRows;
+
+            row = workSheet.GetRow(indexRow);
+            return wbReader.IsReadableRow(row) ? row.RowNum + wbReader.Offset : -1;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -307,24 +351,6 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="wbProvider"></param>
-        /// <param name="sheetname"></param>
-        /// <returns></returns>
-        private static ISheet GetWorkSheet<TSource>(this IXWorkBookProvider<TSource> wbProvider, string sheetname)
-            where TSource : class
-        {
-            HSSFWorkbook workBook = wbProvider.WorkBook;
-            ISheet sheet = workBook.GetSheet(sheetname);
-            if (sheet == null)
-                throw new NotAvailableWorkSheetException("Impossible to find a worksheet with the specified name.", sheetname);
-
-            return sheet;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbProvider"></param>
         /// <param name="workSheet"></param>
         /// <returns></returns>
         private static IRow GetLastRow<TSource>(this IXWorkBookProvider<TSource> wbProvider, ISheet workSheet)
@@ -349,6 +375,27 @@ namespace ExcelEntityMapper.Impl
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="sheetname"></param>
+        /// <returns></returns>
+        private static ISheet GetWorkSheet<TSource>(this IXWorkBookProvider<TSource> wbProvider, string sheetname)
+            where TSource : class
+        {
+            HSSFWorkbook workBook = wbProvider.WorkBook;
+
+            if (workBook == null)
+                throw new UnReadableSheetException("The current XWorkBook to use cannot be null.");
+
+            ISheet sheet = workBook.GetSheet(sheetname);
+            if (sheet == null)
+                throw new NotAvailableWorkSheetException("Impossible to find a worksheet with the specified name.", sheetname);
+
+            return sheet;
+        }
         #endregion
 
         #region Other
@@ -378,6 +425,7 @@ namespace ExcelEntityMapper.Impl
         #endregion
 
 
+
         #region XML sheet implementation
 
         #region Reader methods
@@ -392,8 +440,6 @@ namespace ExcelEntityMapper.Impl
         internal static int ReadObjects<TSource>(this IXLWorkBookReader<TSource> wbReader, string sheetName, IDictionary<int, TSource> buffer)
             where TSource : class, new()
         {
-            if (wbReader.WorkBook == null)
-                throw new UnReadableSheetException("The current WorkBook to use cannot be null.");
 
             IXLWorksheet workSheet = wbReader.GetWorkSheet(sheetName);
             IXLRow row = wbReader.GetFirstRow(workSheet);
@@ -423,6 +469,24 @@ namespace ExcelEntityMapper.Impl
             return counter;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbReader"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="indexRow"></param>
+        /// <returns></returns>
+        internal static TSource ReadObject<TSource>(this IXLWorkBookReader<TSource> wbReader, string sheetName, int indexRow)
+            where TSource : class, new()
+        {
+            if (indexRow < 1)
+                throw new WrongParameterException(string.Format("The index row must be greater than zero, value: {0}", indexRow), "indexRow");
+
+            IXLWorksheet workSheet = wbReader.GetWorkSheet(sheetName);
+            return wbReader.ReadInstance(workSheet.Row(indexRow));
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -478,16 +542,12 @@ namespace ExcelEntityMapper.Impl
                                                   IEnumerable<TSource> instances)
             where TSource : class
         {
-            if (wbWriter.WorkBook == null)
-                throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
-
             IXLWorksheet workSheet = wbWriter.GetWorkSheet(sheetName);
 
             int counter = 0;
             if (instances != null && instances.Any())
             {
                 int rowIndex = 0;
-                //IXLCell header = workSheet.Column(this.IndexKeyColumn).LastCellUsed(); //
                 IXLRow lastRow = wbWriter.GetLastRow(workSheet);
 
                 if (wbWriter.HasHeader)
@@ -581,24 +641,19 @@ namespace ExcelEntityMapper.Impl
         #endregion
 
         #region Common methods
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbProvider"></param>
-        /// <param name="sheetname"></param>
-        /// <returns></returns>
-        private static IXLWorksheet GetWorkSheet<TSource>(this IXLWorkBookProvider<TSource> wbProvider, string sheetname)
+        internal static int GetIndexFirstRow<TSource>(this IXLWorkBookProvider<TSource> wbReader, string sheetName)
             where TSource : class
         {
-            try
-            {
-                return wbProvider.WorkBook.Worksheet(sheetname);
-            }
-            catch (Exception ex)
-            {
-                throw new NotAvailableWorkSheetException("Impossible to find a worksheet with the specified name.", sheetname, ex);
-            }
+            IXLWorksheet workSheet = wbReader.GetWorkSheet(sheetName);
+            IXLRow row = wbReader.GetFirstRow(workSheet);
+
+            if (row == null)
+                return -1;
+
+            if (wbReader.HasHeader)
+                row = row.RowBelow(wbReader.HeaderRows);
+
+            return wbReader.IsReadableRow(row) ? row.RowNumber() : -1;
         }
 
         /// <summary>
@@ -679,6 +734,29 @@ namespace ExcelEntityMapper.Impl
             }
 
             return lastRow;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="sheetname"></param>
+        /// <returns></returns>
+        private static IXLWorksheet GetWorkSheet<TSource>(this IXLWorkBookProvider<TSource> wbProvider, string sheetname)
+            where TSource : class
+        {
+            if (wbProvider.WorkBook == null)
+                throw new UnReadableSheetException("The current XLWorkBook to use cannot be null.");
+
+            try
+            {
+                return wbProvider.WorkBook.Worksheet(sheetname);
+            }
+            catch (Exception ex)
+            {
+                throw new NotAvailableWorkSheetException("Impossible to find a worksheet with the specified name.", sheetname, ex);
+            }
         }
         #endregion
 

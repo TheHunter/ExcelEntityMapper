@@ -38,9 +38,11 @@ namespace ExcelEntityMapperTest
         [Description("A test which demostrate how can be read a xlsx file.")]
         public void ReadObjectsTest1()
         {
-            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
-            sheet.SheetName = "Persons";
-            sheet.BeforeReading = n => n.OwnCar = new Car();
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson)
+                {
+                    SheetName = "Persons",
+                    BeforeReading = person => person.OwnCar = new Car()
+                };
 
             IXLWorkBook workbook = new XLWorkBook(new MemoryStream(this.resourceXml));
 
@@ -93,6 +95,35 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("ReaderXLSX")]
+        [Description("Finding the row index of the first readable row.")]
+        public void FindFirstIndexRow()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+            sheet.InjectWorkBook(workbook);
+
+            Assert.AreEqual(sheet.GetIndexFirstRow("Persons4"), -1);
+            Assert.AreEqual(sheet.GetIndexFirstRow("Persons"), 5);
+        }
+
+        [Test]
+        [Category("ReaderXLSX")]
+        [Description("Finding the row index of the first readable row.")]
+        public void ReadRowOnIndex()
+        {
+            IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+            sheet.InjectWorkBook(workbook);
+
+            //the return object must be validated because It could be initialized with wrongs values from worksheet source.
+            Assert.IsNotNull(sheet.ReadObject("Persons4", 1));
+            Assert.IsNotNull(sheet.ReadObject("Persons", 5));
+        }
+
+        [Test]
+        [Category("ReaderXLSX")]
         [Description("Reading a worksheet with filter.")]
         public void ReadFilteredObjects()
         {
@@ -118,7 +149,7 @@ namespace ExcelEntityMapperTest
         [Category("WrongReadOperation")]
         [Description("It throws an exception because SheetWorker wasn't injected the workbook to read.")]
         [ExpectedException(typeof(UnReadableSheetException))]
-        public void ReadObjectsTest4()
+        public void WrongReadObjectsTest1()
         {
             IXLSheetFiltered<Person> sheet = new XLSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
             sheet.SheetName = "Persons";

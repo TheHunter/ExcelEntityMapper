@@ -15,8 +15,6 @@ namespace ExcelEntityMapper.Impl.BIFF
         : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXWorkBookReader<TSource>, IXWorkBookWriter<TSource>
         where TSource : class, new()
     {
-        private HSSFWorkbook workBook;
-
         /// <summary>
         /// 
         /// </summary>
@@ -39,12 +37,8 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
-        {
-            get { return workBook; }
-            set { this.workBook = value; }
-        }
-        
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -52,6 +46,26 @@ namespace ExcelEntityMapper.Impl.BIFF
         public override void InjectWorkBook(IXLWorkBook workbook)
         {
             this.InjectWorkBook<TSource>(workbook);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int GetIndexFirstRow(string sheetName)
+        {
+            return this.GetIndexFirstRow<TSource>(sheetName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        public override TSource ReadObject(string sheetName, int rowIndex)
+        {
+            return this.ReadObject<TSource>(sheetName, rowIndex);
         }
 
         /// <summary>
