@@ -102,12 +102,18 @@ namespace ExcelEntityMapperTest
         public void FindFirstIndexRow()
         {
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
-            
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
             sheet.InjectWorkBook(workbook);
 
-            Assert.AreEqual(sheet.GetIndexFirstRow("Persons4"), -1);
+            IXLSheetFiltered<Person> sheetNoHeader = new XSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+            IXLWorkBook wb = new XWorkBook(this.emptyResource);
+            sheetNoHeader.InjectWorkBook(wb);
+
             Assert.AreEqual(sheet.GetIndexFirstRow("Persons"), 5);
+            Assert.AreEqual(sheet.GetIndexFirstRow("Persons4"), -1);
+
+            Assert.AreEqual(sheetNoHeader.GetIndexFirstRow("Persons2"), 8);
+            Assert.AreEqual(sheetNoHeader.GetIndexFirstRow("Persons3"), -1);
         }
 
         [Test]
@@ -162,6 +168,26 @@ namespace ExcelEntityMapperTest
         }
 
         [Test]
+        [Category("FinderIndex")]
+        [Description("It tries to find the last used index row.")]
+        public void FindLastIndexRowTest1()
+        {
+            IXLSheetFiltered<Person> sheetHeader = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+            sheetHeader.InjectWorkBook(workbook);
+
+            IXLSheetFiltered<Person> sheetNoHeader = new XSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+            IXLWorkBook wb = new XWorkBook(this.emptyResource);
+            sheetNoHeader.InjectWorkBook(wb);
+
+            Assert.AreEqual(sheetHeader.GetIndexLastRow("Persons"), 5);
+            Assert.AreEqual(sheetHeader.GetIndexLastRow("Persons4"), 6);
+
+            Assert.AreEqual(sheetNoHeader.GetIndexLastRow("Persons2"), 8);
+            Assert.AreEqual(sheetNoHeader.GetIndexLastRow("Persons3"), 0);
+        }
+
+        [Test]
         [Category("WriterXLS")]
         [Description("A test which demostrate how can be saved a new workbook with header of properties mapped.")]
         public void WriteObjectsTest1()
@@ -201,7 +227,7 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("WriterXLS")]
-        [Description("A test which demostrate how can be saved a new worksheet with header of properties mapped.")]
+        [Description("A test which demostrate how can be appended instances on worksheet with header of properties mapped.")]
         public void WriteObjectsTest3()
         {
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
@@ -220,8 +246,25 @@ namespace ExcelEntityMapperTest
 
         [Test]
         [Category("WriterXLS")]
-        [Description("A test which demostrate how can be written two typed objects into the same sheet.")]
+        [Description("A test which demostrate how can be appended instances on worksheet without header of properties mapped.")]
         public void WriteObjectsTest4()
+        {
+            IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+            IXLWorkBook workbook = new XWorkBook(this.emptyResource);
+
+            sheet.InjectWorkBook(workbook);
+
+            var count1 = sheet.WriteObjects("Persons2", GetDefaultPersons());
+            var count2 = sheet.WriteObjects("Persons3", GetDefaultPersons());
+
+            Assert.IsTrue(count1 > 0 && count2 > 0);
+            WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_NoHeader2.xls"), workbook.Save());
+        }
+
+        [Test]
+        [Category("WriterXLS")]
+        [Description("A test which demostrate how can be written two typed objects into the same sheet.")]
+        public void WriteObjectsTest5()
         {
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
 

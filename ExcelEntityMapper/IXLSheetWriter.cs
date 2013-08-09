@@ -24,6 +24,30 @@ namespace ExcelEntityMapper
         Action<TSource> AfterWriting { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        int GetIndexLastRow(string sheetName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        int WriteObject(int rowIndex, TSource instance);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        int WriteObject(string sheetName, int rowIndex, TSource instance);
+
+        /// <summary>
         /// Writes all objects into current worksheet rows.
         /// </summary>
         /// <param name="instances">Objects which be written into current worksheet rows.</param>

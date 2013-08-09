@@ -129,6 +129,26 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public int WriteObject(int rowIndex, TSource instance)
+        {
+            return this.WriteObject(this.SheetName, rowIndex, instance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public abstract int WriteObject(string sheetName, int rowIndex, TSource instance);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="instances"></param>
         /// <returns></returns>
         public int WriteObjects(IEnumerable<TSource> instances)
@@ -143,5 +163,6 @@ namespace ExcelEntityMapper.Impl
         /// <param name="instances"></param>
         /// <returns></returns>
         public abstract int WriteObjects(string sheetName, IEnumerable<TSource> instances);
+
     }
 }

@@ -38,8 +38,9 @@ namespace ExcelEntityMapper.Impl
         /// <param name="wbReader"></param>
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
-        /// <returns></returns>
-        internal static int ReadObjects<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName, IDictionary<int, TSource> buffer)
+        /// <returns>returns the number of rows read.</returns>
+        internal static int ReadObjects<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName,
+                                                 IDictionary<int, TSource> buffer)
             where TSource : class, new()
         {
             ISheet workSheet = wbReader.GetWorkSheet(sheetName);
@@ -78,7 +79,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="sheetName"></param>
         /// <param name="indexRow"></param>
         /// <returns></returns>
-        internal static TSource ReadObject<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName, int indexRow)
+        internal static TSource ReadObject<TSource>(this IXWorkBookReader<TSource> wbReader, string sheetName,
+                                                    int indexRow)
             where TSource : class, new()
         {
             indexRow -= wbReader.Offset;
@@ -147,9 +149,52 @@ namespace ExcelEntityMapper.Impl
         /// <typeparam name="TSource"></typeparam>
         /// <param name="wbWriter"></param>
         /// <param name="sheetName"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        internal static int WriteObject<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                 TSource instance)
+            where TSource : class
+        {
+            int rowIndex = wbWriter.GetIndexLastRow<TSource>(sheetName) + 1;
+            return wbWriter.WriteObject<TSource>(sheetName, rowIndex, instance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        internal static int WriteObject<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                 int rowIndex, TSource instance)
+            where TSource : class
+        {
+            
+            if ((--rowIndex) < 0)
+                throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
+
+            IRow row = wbWriter.GetWorkSheet(sheetName)
+                                             .GetRow(rowIndex);
+
+            if (wbWriter.WriteInstance(row, instance))
+                return ++rowIndex;
+
+            return -1;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
+        /// <param name="sheetName"></param>
         /// <param name="instances"></param>
         /// <returns></returns>
-        internal static int WriteObjects<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName, IEnumerable<TSource> instances)
+        internal static int WriteObjects<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                  IEnumerable<TSource> instances)
             where TSource : class
         {
             ISheet workSheet = wbWriter.GetWorkSheet(sheetName);
@@ -160,17 +205,17 @@ namespace ExcelEntityMapper.Impl
                 int rowIndex = -1;
                 IRow lastRow = wbWriter.GetLastRow(workSheet);
 
-                if (wbWriter.HasHeader)
+                if (lastRow == null)
                 {
-                    if (lastRow == null)
+                    if (wbWriter.HasHeader)
                     {
-                        rowIndex = 0;
+                        rowIndex ++;
                         wbWriter.WriteHeader(rowIndex, workSheet);
                     }
-                    else
-                    {
-                        rowIndex = lastRow.RowNum;
-                    }
+                }
+                else
+                {
+                    rowIndex = lastRow.RowNum;
                 }
 
                 foreach (var current in instances)
@@ -194,7 +239,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="wbWriter"></param>
         /// <param name="rowBase"></param>
         /// <param name="sheet"></param>
-        private static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, int rowBase, ISheet sheet)
+        private static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, int rowBase,
+                                                 ISheet sheet)
             where TSource : class
         {
             int index = rowBase;
@@ -222,7 +268,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="row"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        private static bool WriteInstance<TSource>(this IXWorkBookWriter<TSource> wbWriter, IRow row, TSource instance)
+        private static bool WriteInstance<TSource>(this IXWorkBookWriter<TSource> wbWriter, IRow row,
+                                                   TSource instance)
             where TSource : class
         {
             bool ret = false;
@@ -271,34 +318,34 @@ namespace ExcelEntityMapper.Impl
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbReader"></param>
+        /// <param name="wbProvider"></param>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        internal static int GetIndexFirstRow<TSource>(this IXWorkBookProvider<TSource> wbReader, string sheetName)
+        internal static int GetIndexFirstRow<TSource>(this IXWorkBookProvider<TSource> wbProvider, string sheetName)
             where TSource : class
         {
-            ISheet workSheet = wbReader.GetWorkSheet(sheetName);
-            IRow row = wbReader.GetFirstRow(workSheet);
+            ISheet workSheet = wbProvider.GetWorkSheet(sheetName);
+            IRow row = wbProvider.GetFirstRow(workSheet);
 
             if (row == null)
                 return -1;
 
             int indexRow = row.RowNum;
-            if (wbReader.HasHeader)
-                indexRow += wbReader.HeaderRows;
+            if (wbProvider.HasHeader)
+                indexRow += wbProvider.HeaderRows;
 
             row = workSheet.GetRow(indexRow);
-            return wbReader.IsReadableRow(row) ? row.RowNum + wbReader.Offset : -1;
+            return wbProvider.IsReadableRow(row) ? row.RowNum + wbProvider.Offset : -1;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbReader"></param>
+        /// <param name="wbProvider"></param>
         /// <param name="workSheet"></param>
         /// <returns></returns>
-        private static IRow GetFirstRow<TSource>(this IXWorkBookProvider<TSource> wbReader, ISheet workSheet)
+        private static IRow GetFirstRow<TSource>(this IXWorkBookProvider<TSource> wbProvider, ISheet workSheet)
             where TSource : class
         {
             int lastrow = workSheet.LastRowNum;
@@ -307,7 +354,7 @@ namespace ExcelEntityMapper.Impl
             for (int index = 0; index <= lastrow; index++)
             {
                 IRow current = workSheet.GetRow(index);
-                if (wbReader.IsReadableRow(current))
+                if (wbProvider.IsReadableRow(current))
                 {
                     first = current;
                     break;
@@ -320,27 +367,45 @@ namespace ExcelEntityMapper.Impl
         /// 
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
-        /// <param name="wbReader"></param>
+        /// <param name="wbProvider"></param>
         /// <param name="row"></param>
         /// <returns></returns>
-        private static bool IsReadableRow<TSource>(this IXWorkBookProvider<TSource> wbReader, IRow row)
+        private static bool IsReadableRow<TSource>(this IXWorkBookProvider<TSource> wbProvider, IRow row)
             where TSource : class
         {
             if (row == null)
                 return false;
 
-            var col = wbReader.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
+            var col = wbProvider.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
 
             return col.Any() && col.All
                 (
                     mapper =>
                     {
-                        ICell cell = row.GetCell(mapper.ColumnIndex - wbReader.Offset);
+                        ICell cell = row.GetCell(mapper.ColumnIndex - wbProvider.Offset);
                         if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
                             return false;
                         return true;
                     }
                 );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        internal static int GetIndexLastRow<TSource>(this IXWorkBookProvider<TSource> wbProvider, string sheetName)
+            where TSource : class
+        {
+            ISheet workSheet = wbProvider.GetWorkSheet(sheetName);
+            IRow lastRow = wbProvider.GetLastRow(workSheet);
+            if (lastRow != null)
+                return lastRow.RowNum + wbProvider.Offset;
+
+            return wbProvider.HeaderRows;
         }
 
         /// <summary>
@@ -393,6 +458,7 @@ namespace ExcelEntityMapper.Impl
 
             return sheet;
         }
+        
         #endregion
 
         #region Other
@@ -529,6 +595,48 @@ namespace ExcelEntityMapper.Impl
         #endregion
 
         #region Writer methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        internal static int WriteObject<TSource>(this IXLWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                 TSource instance)
+            where TSource : class
+        {
+            int rowIndex = wbWriter.GetIndexLastRow<TSource>(sheetName) + 1;
+            return wbWriter.WriteObject<TSource>(sheetName, rowIndex, instance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        internal static int WriteObject<TSource>(this IXLWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                 int rowIndex, TSource instance)
+            where TSource : class
+        {
+            if (rowIndex < 1)
+                throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
+
+            IXLRow row = wbWriter.GetWorkSheet(sheetName)
+                                             .Row(rowIndex);
+
+            if (wbWriter.WriteInstance(row, instance))
+                return rowIndex;
+
+            return -1;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -549,17 +657,17 @@ namespace ExcelEntityMapper.Impl
                 int rowIndex = 0;
                 IXLRow lastRow = wbWriter.GetLastRow(workSheet);
 
-                if (wbWriter.HasHeader)
+                if (lastRow == null)
                 {
-                    if (lastRow == null)
+                    if (wbWriter.HasHeader)
                     {
-                        rowIndex = 1;
+                        rowIndex++;
                         wbWriter.WriteHeader(rowIndex, workSheet);
                     }
-                    else
-                    {
-                        rowIndex = lastRow.RowNumber();
-                    }
+                }
+                else
+                {
+                    rowIndex = lastRow.RowNumber();
                 }
 
                 foreach (var current in instances)
@@ -580,7 +688,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="wbWriter"></param>
         /// <param name="rowBase"></param>
         /// <param name="sheet"></param>
-        private static void WriteHeader<TSource>(this IXLWorkBookWriter<TSource> wbWriter, int rowBase, IXLWorksheet sheet)
+        private static void WriteHeader<TSource>(this IXLWorkBookWriter<TSource> wbWriter, int rowBase,
+                                                 IXLWorksheet sheet)
             where TSource : class
         {
             var row = sheet.Row(rowBase);
@@ -603,7 +712,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="row"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
-        private static bool WriteInstance<TSource>(this IXLWorkBookWriter<TSource> wbWriter, IXLRow row, TSource instance)
+        private static bool WriteInstance<TSource>(this IXLWorkBookWriter<TSource> wbWriter, IXLRow row,
+                                                   TSource instance)
             where TSource : class
         {
             bool ret = false;
@@ -637,6 +747,7 @@ namespace ExcelEntityMapper.Impl
 
             return ret;
         }
+        
         #endregion
 
         #region Common methods
@@ -699,6 +810,25 @@ namespace ExcelEntityMapper.Impl
         {
             var col = wbProvider.PropertyMappers.Where(n => n.CustomType == MapperType.Key);
             return col.Any() && col.All(n => !row.Cell(n.ColumnIndex).IsEmpty());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbProvider"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        internal static int GetIndexLastRow<TSource>(this IXLWorkBookProvider<TSource> wbProvider, string sheetName)
+            where TSource : class
+        {
+            IXLWorksheet workSheet = wbProvider.GetWorkSheet(sheetName);
+            IXLRow lastRow = wbProvider.GetLastRow(workSheet);
+            
+            if (lastRow != null)
+                return lastRow.RowNumber();
+
+            return wbProvider.HeaderRows;
         }
 
         /// <summary>

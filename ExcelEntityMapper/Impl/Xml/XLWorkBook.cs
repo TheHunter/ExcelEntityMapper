@@ -98,6 +98,9 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public bool AddSheet(string sheetName)
         {
+            if (sheetName == null || sheetName.Trim().Equals(string.Empty))
+                return false;
+
             if (!this.ExistsWorkSheet(sheetName))
             {
                 this.workBook.AddWorksheet(sheetName);
@@ -113,6 +116,9 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <returns></returns>
         public bool RemoveSheet(string sheetName)
         {
+            if (sheetName == null || sheetName.Trim().Equals(string.Empty))
+                return false;
+
             this.workBook.Worksheets.Delete(sheetName);
             return true;
         }

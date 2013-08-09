@@ -103,6 +103,9 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns></returns>
         public bool AddSheet(string sheetName)
         {
+            if (sheetName == null || sheetName.Trim().Equals(string.Empty))
+                return false;
+
             if (!this.ExistsWorkSheet(sheetName))
             {
                 this.workBook.CreateSheet(sheetName);
@@ -118,6 +121,9 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <returns></returns>
         public bool RemoveSheet(string sheetName)
         {
+            if (sheetName == null || sheetName.Trim().Equals(string.Empty))
+                return false;
+
             if (this.ExistsWorkSheet(sheetName))
             {
                 this.workBook.RemoveSheetAt(this.workBook.GetSheetIndex(sheetName));

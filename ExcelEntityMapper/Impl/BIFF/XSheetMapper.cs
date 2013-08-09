@@ -42,6 +42,16 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public int GetIndexLastRow(string sheetName)
+        {
+            return this.GetIndexLastRow<TSource>(sheetName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="workbook"></param>
         public override void InjectWorkBook(IXLWorkBook workbook)
         {
@@ -77,6 +87,18 @@ namespace ExcelEntityMapper.Impl.BIFF
         public override int ReadObjects(string sheetName, IDictionary<int, TSource> buffer)
         {
             return this.ReadObjects<TSource>(sheetName, buffer);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public override int WriteObject(string sheetName, int rowIndex, TSource instance)
+        {
+            return this.WriteObject<TSource>(sheetName, rowIndex, instance);
         }
 
         /// <summary>
