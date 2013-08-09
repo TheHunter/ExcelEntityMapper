@@ -86,8 +86,10 @@ namespace ExcelEntityMapper.Impl
             if (indexRow < 0)
                 throw new WrongParameterException(string.Format("The index row must be greater than zero, value: {0}", indexRow), "indexRow");
 
-            ISheet workSheet = wbReader.GetWorkSheet(sheetName);
-            return wbReader.ReadInstance(workSheet.GetRow(indexRow));
+            IRow row = wbReader.GetWorkSheet(sheetName)
+                                .GetRow(indexRow);
+
+            return wbReader.IsReadableRow(row) ? wbReader.ReadInstance(row) : null;
         }
 
         /// <summary>
@@ -117,8 +119,7 @@ namespace ExcelEntityMapper.Impl
                                 ICell cell = row.GetCell(parameter.ColumnIndex - wbReader.Offset);
                                 if (cell != null)
                                 {
-                                    string cellValue = null;
-                                    cellValue = cell.CellType == CellType.NUMERIC ? cell.NumericCellValue.ToString(CultureInfo.InvariantCulture) : cell.StringCellValue;
+                                    string cellValue = cell.CellType == CellType.NUMERIC ? cell.NumericCellValue.ToString(CultureInfo.InvariantCulture) : cell.StringCellValue;
                                     parameter.ToPropertyFormat(instance, cellValue);
                                 }
                             }
@@ -151,10 +152,6 @@ namespace ExcelEntityMapper.Impl
         internal static int WriteObjects<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName, IEnumerable<TSource> instances)
             where TSource : class
         {
-            //HSSFWorkbook workBook = wbWriter.WorkBook;
-            //if (workBook == null)
-            //    throw new UnWriteableSheetException("The current WorkBook to use cannot be null.");
-
             ISheet workSheet = wbWriter.GetWorkSheet(sheetName);
 
             int counter = 0;
@@ -172,7 +169,7 @@ namespace ExcelEntityMapper.Impl
                     }
                     else
                     {
-                        rowIndex = lastRow.RowNum; //+ (this.HeaderRows - 1);
+                        rowIndex = lastRow.RowNum;
                     }
                 }
 
@@ -483,8 +480,10 @@ namespace ExcelEntityMapper.Impl
             if (indexRow < 1)
                 throw new WrongParameterException(string.Format("The index row must be greater than zero, value: {0}", indexRow), "indexRow");
 
-            IXLWorksheet workSheet = wbReader.GetWorkSheet(sheetName);
-            return wbReader.ReadInstance(workSheet.Row(indexRow));
+            IXLRow row = wbReader.GetWorkSheet(sheetName)
+                            .Row(indexRow);
+
+            return wbReader.IsReadableRow(row) ? wbReader.ReadInstance(row) : null;
         }
         
         /// <summary>

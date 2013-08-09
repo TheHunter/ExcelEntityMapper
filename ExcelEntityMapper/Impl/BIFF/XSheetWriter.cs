@@ -15,8 +15,6 @@ namespace ExcelEntityMapper.Impl.BIFF
         : SheetWriter<TSource>, IXWorkBookWriter<TSource>
         where TSource : class
     {
-        private HSSFWorkbook workBook;
-
         /// <summary>
         /// 
         /// </summary>
@@ -39,11 +37,7 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// <summary>
         /// 
         /// </summary>
-        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook
-        {
-            get { return this.workBook; }
-            set { this.workBook = value; }
-        }
+        HSSFWorkbook IXWorkBookProvider<TSource>.WorkBook { get; set; }
 
         /// <summary>
         /// 

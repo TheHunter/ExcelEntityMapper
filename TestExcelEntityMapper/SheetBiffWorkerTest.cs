@@ -82,7 +82,7 @@ namespace ExcelEntityMapperTest
         public void ReadObjectsTest3()
         {
             IXLSheetFiltered<Person> sheet = new XSheetFilteredMapper<Person>(1, this.PropertyMappersPerson);
-            sheet.SheetName = "Persons3";
+            sheet.SheetName = "Persons4";
             sheet.BeforeReading = n => n.OwnCar = new Car();
 
             IXLWorkBook workbook = new XWorkBook(this.emptyResource);
@@ -121,7 +121,7 @@ namespace ExcelEntityMapperTest
             sheet.InjectWorkBook(workbook);
 
             //the return object must be validated because It could be initialized with wrongs values from worksheet source.
-            Assert.IsNotNull(sheet.ReadObject("Persons4", 1));
+            Assert.IsNull(sheet.ReadObject("Persons4", 1));
             Assert.IsNotNull(sheet.ReadObject("Persons", 5));
         }
 

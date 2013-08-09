@@ -14,8 +14,6 @@ namespace ExcelEntityMapper.Impl.Xml
         : SheetMapper<TSource>, IXLSheetWorker<TSource>, IXLWorkBookReader<TSource>, IXLWorkBookWriter<TSource>
         where TSource : class, new()
     {
-        private XLWorkbook workBook;
-
         /// <summary>
         /// 
         /// </summary>
@@ -38,11 +36,7 @@ namespace ExcelEntityMapper.Impl.Xml
         /// <summary>
         /// 
         /// </summary>
-        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook
-        {
-            get { return this.workBook; }
-            set { this.workBook = value; }
-        }
+        XLWorkbook IXLWorkBookProvider<TSource>.WorkBook { get; set; }
 
         /// <summary>
         /// 

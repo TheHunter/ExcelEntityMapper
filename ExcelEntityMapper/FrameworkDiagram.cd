@@ -24,7 +24,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ExcelEntityMapper.Impl.BIFF.XSheetFilteredMapper&lt;TSource&gt;">
-    <Position X="27.75" Y="13.5" Width="1.5" />
+    <Position X="27.75" Y="12.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Impl\BIFF\XSheetFilteredMapper.cs</FileName>
@@ -40,7 +40,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ExcelEntityMapper.Impl.Xml.XLSheetFilteredMapper&lt;TSource&gt;">
-    <Position X="33" Y="13.5" Width="1.5" />
+    <Position X="33" Y="12.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Impl\Xml\XLSheetFilteredMapper.cs</FileName>
@@ -82,7 +82,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAAAgAACCQAAQAAAAEEAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAIAAAAAgAACCQQAQAAAAEEAAAAgAAAAAAAAAAA=</HashCode>
       <FileName>Impl\SheetMapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -147,7 +147,7 @@
   <Class Name="ExcelEntityMapper.Impl.SheetReader&lt;TSource&gt;">
     <Position X="16.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEAAIAAAAAgAAACQAAQAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAEAAIAAAAAgAAACQQAQAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Impl\SheetReader.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
