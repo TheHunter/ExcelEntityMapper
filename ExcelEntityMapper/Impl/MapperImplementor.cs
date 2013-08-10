@@ -173,11 +173,11 @@ namespace ExcelEntityMapper.Impl
             where TSource : class
         {
             
-            if ((--rowIndex) < 0)
+            if ((rowIndex -= wbWriter.Offset) < 0)
                 throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
 
-            IRow row = wbWriter.GetWorkSheet(sheetName)
-                                             .GetRow(rowIndex);
+            ISheet sheet = wbWriter.GetWorkSheet(sheetName);
+            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
 
             if (wbWriter.WriteInstance(row, instance))
                 return ++rowIndex;
@@ -222,11 +222,10 @@ namespace ExcelEntityMapper.Impl
                 {
                     rowIndex++;
                     IRow row = workSheet.GetRow(rowIndex) ?? workSheet.CreateRow(rowIndex);
-
                     if (wbWriter.WriteInstance(row, current))
-                    {
                         counter++;
-                    }
+                    else
+                        rowIndex--;
                 }
             }
             return counter;
@@ -330,11 +329,10 @@ namespace ExcelEntityMapper.Impl
             if (row == null)
                 return -1;
 
-            int indexRow = row.RowNum;
-            if (wbProvider.HasHeader)
-                indexRow += wbProvider.HeaderRows;
+            if (!wbProvider.HasHeader)
+                return row.RowNum + wbProvider.Offset;
 
-            row = workSheet.GetRow(indexRow);
+            row = workSheet.GetRow(row.RowNum + wbProvider.HeaderRows);
             return wbProvider.IsReadableRow(row) ? row.RowNum + wbProvider.Offset : -1;
         }
 
@@ -632,7 +630,7 @@ namespace ExcelEntityMapper.Impl
                                              .Row(rowIndex);
 
             if (wbWriter.WriteInstance(row, instance))
-                return rowIndex;
+                return ++rowIndex;
 
             return -1;
         }
@@ -672,10 +670,11 @@ namespace ExcelEntityMapper.Impl
 
                 foreach (var current in instances)
                 {
-                    rowIndex++;
-                    IXLRow row = workSheet.Row(rowIndex);
+                    IXLRow row = workSheet.Row(++rowIndex);
                     if (wbWriter.WriteInstance(row, current))
                         counter++;
+                    else
+                        rowIndex--;
                 }
             }
             return counter;
@@ -696,11 +695,11 @@ namespace ExcelEntityMapper.Impl
 
             wbWriter.PropertyMappers.All
                 (
-                    delegate(IXLPropertyMapper<TSource> parameter)
-                    {
-                        row.Cell(parameter.ColumnIndex).Value = parameter.ColumnHeader;
-                        return true;
-                    }
+                    parameter =>
+                        {
+                            row.Cell(parameter.ColumnIndex).Value = parameter.ColumnHeader;
+                            return true;
+                        }
                 );
         }
 
@@ -751,6 +750,13 @@ namespace ExcelEntityMapper.Impl
         #endregion
 
         #region Common methods
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbReader"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
         internal static int GetIndexFirstRow<TSource>(this IXLWorkBookProvider<TSource> wbReader, string sheetName)
             where TSource : class
         {
@@ -760,9 +766,10 @@ namespace ExcelEntityMapper.Impl
             if (row == null)
                 return -1;
 
-            if (wbReader.HasHeader)
-                row = row.RowBelow(wbReader.HeaderRows);
+            if (!wbReader.HasHeader)
+                return row.RowNumber();
 
+            row = row.RowBelow(wbReader.HeaderRows);
             return wbReader.IsReadableRow(row) ? row.RowNumber() : -1;
         }
 

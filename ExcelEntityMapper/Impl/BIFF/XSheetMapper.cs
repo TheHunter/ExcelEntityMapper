@@ -93,6 +93,17 @@ namespace ExcelEntityMapper.Impl.BIFF
         /// 
         /// </summary>
         /// <param name="sheetName"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public override int WriteObject(string sheetName, TSource instance)
+        {
+            return this.WriteObject<TSource>(sheetName, instance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
         /// <param name="rowIndex"></param>
         /// <param name="instance"></param>
         /// <returns></returns>

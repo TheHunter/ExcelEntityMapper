@@ -24,18 +24,26 @@ namespace ExcelEntityMapper
         Action<TSource> AfterReading { get; set; }
 
         /// <summary>
-        /// 
+        /// Tries to find the first readable row of the given sheet name.
         /// </summary>
-        /// <param name="sheetName"></param>
-        /// <returns></returns>
+        /// <param name="sheetName">the sheet name on looking for the first readable row.</param>
+        /// <returns>returns the first readable row index of the internal worksheet, if no rows has found it returns -1.</returns>.
         int GetIndexFirstRow(string sheetName);
 
         /// <summary>
-        /// 
+        /// Tries to read a row by the given index.
         /// </summary>
-        /// <param name="rowIndex"></param>
-        /// <returns></returns>
+        /// <param name="rowIndex">the row index to read.</param>
+        /// <returns>returns the object indicated in the given row index, if the given index doesn't corrispond to readable row, It returns null.</returns>
         TSource ReadObject(int rowIndex);
+
+        /// <summary>
+        /// Tries to read a row by the given index.
+        /// </summary>
+        /// <param name="sheetName">the sheet name for reading the row with the given index.</param>
+        /// <param name="rowIndex">the row index to read.</param>
+        /// <returns></returns>
+        TSource ReadObject(string sheetName, int rowIndex);
 
         /// <summary>
         /// Reads all worksheet rows and transforms into objects.
@@ -43,14 +51,6 @@ namespace ExcelEntityMapper
         /// <param name="buffer">A buffer which will be contain all intances read from worksheet.</param>
         /// <returns>Returns the row number read from the current worksheet.</returns>
         int ReadObjects(IDictionary<int, TSource> buffer);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheetName"></param>
-        /// <param name="rowIndex"></param>
-        /// <returns></returns>
-        TSource ReadObject(string sheetName, int rowIndex);
 
         /// <summary>
         /// Reads all worksheet rows and transforms into objects.

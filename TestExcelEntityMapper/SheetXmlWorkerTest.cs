@@ -177,10 +177,10 @@ namespace ExcelEntityMapperTest
             IXLWorkBook wb = new XLWorkBook(this.emptyResourceXml);
             sheetNoHeader.InjectWorkBook(wb);
 
-            Assert.AreEqual(sheetHeader.GetIndexLastRow("Persons"), 5);
+            Assert.AreEqual(sheetHeader.GetIndexLastRow("Persons"), 6);
             Assert.AreEqual(sheetHeader.GetIndexLastRow("Persons4"), 6);
 
-            Assert.AreEqual(sheetNoHeader.GetIndexLastRow("Persons2"), 8);
+            Assert.AreEqual(sheetNoHeader.GetIndexLastRow("Persons2"), 9);
             Assert.AreEqual(sheetNoHeader.GetIndexLastRow("Persons3"), 0);
         }
 
@@ -235,9 +235,13 @@ namespace ExcelEntityMapperTest
 
             sheet.InjectWorkBook(workbook);
 
-            var count = sheet.WriteObjects(GetDefaultPersons());
+            var lista = new List<Person>(GetDefaultPersons());
+            //a null object which will not be saved into worksheet.
+            lista.Insert(1, null);
 
-            Assert.IsTrue(count > 0);
+            var count = sheet.WriteObjects(lista);
+
+            Assert.AreEqual(count, lista.Count - 1);
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_Header2.xlsx"), workbook.Save());
         }
 
@@ -256,6 +260,59 @@ namespace ExcelEntityMapperTest
 
             Assert.IsTrue(count1 > 0 && count2 > 0);
             WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_NoHeader2.xlsx"), workbook.Save());
+        }
+
+        [Test]
+        [Category("WriterXLSX")]
+        [Description("")]
+        public void WriteObjectsByIndexTest()
+        {
+            IXLSheetFiltered<Person> sheetNoHeader = new XLSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheetHeader = new XLSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+
+            sheetNoHeader.InjectWorkBook(workbook);
+            sheetHeader.InjectWorkBook(workbook);
+
+            var p1 = sheetNoHeader.GetIndexLastRow("Persons");
+            var p2 = sheetNoHeader.GetIndexLastRow("Persons2");
+            var p3 = sheetNoHeader.GetIndexLastRow("Persons3");
+            var p4 = sheetNoHeader.GetIndexLastRow("Persons4");
+
+            var persons = GetDefaultPersons();
+            foreach (var person in persons)
+            {
+                sheetHeader.WriteObject("Persons", ++p1, person);
+                sheetNoHeader.WriteObject("Persons2", ++p2, person);
+                sheetNoHeader.WriteObject("Persons3", ++p3, person);
+                sheetHeader.WriteObject("Persons4", ++p4, person);
+            }
+            WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_byIndex.xlsx"), workbook.Save());
+        }
+
+        [Test]
+        [Category("WriterXLSX")]
+        [Description("")]
+        public void AppendObjectsTest()
+        {
+            IXLSheetFiltered<Person> sheetNoHeader = new XLSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+            IXLSheetFiltered<Person> sheetHeader = new XLSheetFilteredMapper<Person>(this.PropertyMappersPerson);
+
+            IXLWorkBook workbook = new XLWorkBook(this.emptyResourceXml);
+
+            sheetNoHeader.InjectWorkBook(workbook);
+            sheetHeader.InjectWorkBook(workbook);
+
+            var persons = GetDefaultPersons();
+            foreach (var person in persons)
+            {
+                sheetHeader.WriteObject("Persons", person);
+                sheetNoHeader.WriteObject("Persons2", person);
+                sheetNoHeader.WriteObject("Persons3", person);
+                sheetHeader.WriteObject("Persons4", person);
+            }
+            WriteFileFromStream(Path.Combine(this.OutputPath, "test_output_AppendObjects.xlsx"), workbook.Save());
         }
 
         [Test]

@@ -69,6 +69,24 @@ namespace ExcelEntityMapper.Impl
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public int WriteObject(TSource instance)
+        {
+            return this.WriteObject(this.SheetName, instance);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
+        public abstract int WriteObject(string sheetName, TSource instance);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="rowIndex"></param>
         /// <param name="instance"></param>
         /// <returns></returns>
