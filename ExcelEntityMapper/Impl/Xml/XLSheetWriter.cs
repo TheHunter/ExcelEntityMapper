@@ -89,5 +89,11 @@ namespace ExcelEntityMapper.Impl.Xml
         {
             this.InjectWorkBook<TSource>(workbook);
         }
+
+
+        public override void WriteHeader(string sheetName, int rowIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

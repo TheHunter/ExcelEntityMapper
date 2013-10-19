@@ -76,5 +76,8 @@ namespace ExcelEntityMapper
         /// <param name="instances">Objects which be written into current worksheet rows.</param>
         /// <returns>returns the next index of row which contains the given instance, and returns -1 if the instance wasn't be saved.</returns>
         int WriteObjects(string sheetName, IEnumerable<TSource> instances);
+
+
+        void WriteHeader(string sheetName, int rowIndex);
     }
 }

@@ -121,5 +121,13 @@ namespace ExcelEntityMapper.Impl.Xml
         {
             return this.WriteObjects<TSource>(sheetName, instances);
         }
+
+
+        public override void WriteHeader(string sheetName, int rowIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

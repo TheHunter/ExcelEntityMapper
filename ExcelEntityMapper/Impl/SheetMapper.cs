@@ -182,5 +182,7 @@ namespace ExcelEntityMapper.Impl
         /// <returns></returns>
         public abstract int WriteObjects(string sheetName, IEnumerable<TSource> instances);
 
+
+        public abstract void WriteHeader(string sheetName, int rowIndex);
     }
 }

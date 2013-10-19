@@ -29,6 +29,7 @@ namespace ExcelEntityMapper
             NumericTypes.Add(typeof(short));
             NumericTypes.Add(typeof(int));
             NumericTypes.Add(typeof(long));
+            //NumericTypes.Add(typeof(decimal));
             NumericTypes.Add(typeof(double));
         }
 
@@ -167,7 +168,7 @@ namespace ExcelEntityMapper
         /// <returns></returns>
         public static object NormalizeXlsCellValue(object value)
         {
-            if (value == null)
+            if (value == null || value is DBNull)
                 return string.Empty;
 
             Type type = value.GetType();
@@ -181,6 +182,9 @@ namespace ExcelEntityMapper
 
             if (type == typeof(string) || IsNumericValue(type))
                 return value;
+            
+            if (type == typeof (decimal))
+                return Convert.ToDouble(value);
 
             return value.ToString();
 

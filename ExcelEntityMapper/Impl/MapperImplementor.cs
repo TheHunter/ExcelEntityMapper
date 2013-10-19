@@ -236,6 +236,33 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="wbWriter"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="sheetName"></param>
+        internal static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, int rowIndex, string sheetName)
+            where TSource : class
+        {
+            if ((rowIndex -= wbWriter.Offset) < 0)
+                throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
+
+            ISheet sheet = wbWriter.GetWorkSheet(sheetName);
+            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+
+            wbWriter.PropertyMappers.All
+                (
+                    delegate(IXLPropertyMapper<TSource> parameter)
+                    {
+                        row.CreateCell(parameter.ColumnIndex - wbWriter.Offset)
+                            .SetCellValue(parameter.ColumnHeader);
+                        return true;
+                    }
+                );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
         /// <param name="rowBase"></param>
         /// <param name="sheet"></param>
         private static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, int rowBase,
@@ -381,9 +408,16 @@ namespace ExcelEntityMapper.Impl
                     mapper =>
                     {
                         ICell cell = row.GetCell(mapper.ColumnIndex - wbProvider.Offset);
-                        if (cell == null || string.IsNullOrEmpty(cell.StringCellValue))
+                        if (cell == null)
                             return false;
-                        return true;
+
+                        object objValue = cell.CellType == CellType.NUMERIC
+                                              ? cell.NumericCellValue as object
+                                              : cell.StringCellValue;
+
+                        return objValue != null;
+                        //return cell.CellType == CellType.NUMERIC ? cell.NumericCellValue
+                        //return !string.IsNullOrEmpty(cell.StringCellValue);
                     }
                 );
         }
