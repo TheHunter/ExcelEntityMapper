@@ -77,7 +77,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out2_.xls"), mem);
         }
 
-        //[Test]
+        [Test]
         [Category("Demo")]
         public void Test3()
         {
@@ -90,6 +90,14 @@ namespace ExcelEntityMapperTest
             Assert.AreEqual(row0, header);
             Assert.AreSame(row0, header);
             Assert.IsNotNull(header);
+
+            var rowN = sheet.CreateRow(20);
+            Assert.IsNotNull(rowN);
+            Assert.IsNotNull(sheet.GetRow(20));
+            Assert.IsNull(sheet.GetRow(19));
+
+            var cell20 = header.CreateCell(20);
+            Console.WriteLine(cell20.CellType);
 
             header.CreateCell(0).SetCellValue("header1");
             header.CreateCell(1).SetCellValue("header2");
@@ -160,6 +168,8 @@ namespace ExcelEntityMapperTest
             Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue((double?)5D).GetType(), typeof(double));
 
             Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(null).GetType(), typeof(string));
+
+            Assert.AreEqual(XLEntityHelper.NormalizeXlsCellValue(DBNull.Value).GetType(), typeof(string));
         }
 
 

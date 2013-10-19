@@ -77,7 +77,11 @@ namespace ExcelEntityMapper
         /// <returns>returns the next index of row which contains the given instance, and returns -1 if the instance wasn't be saved.</returns>
         int WriteObjects(string sheetName, IEnumerable<TSource> instances);
 
-
+        /// <summary>
+        /// Writes the row header on the spedified index.
+        /// </summary>
+        /// <param name="sheetName">the sheet name on writing the header.</param>
+        /// <param name="rowIndex">the index on write the header.</param>
         void WriteHeader(string sheetName, int rowIndex);
     }
 }

@@ -90,10 +90,14 @@ namespace ExcelEntityMapper.Impl.Xml
             this.InjectWorkBook<TSource>(workbook);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
         public override void WriteHeader(string sheetName, int rowIndex)
         {
-            throw new NotImplementedException();
+            this.WriteHeader<TSource>(sheetName, rowIndex);
         }
     }
 }

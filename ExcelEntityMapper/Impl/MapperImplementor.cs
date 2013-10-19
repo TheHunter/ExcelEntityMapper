@@ -50,8 +50,8 @@ namespace ExcelEntityMapper.Impl
             if (row == null)
                 return counter;
 
-            if (wbReader.HasHeader)
-                row = workSheet.GetRow(row.RowNum + wbReader.HeaderRows);
+            if (wbReader.HasHeader) //row = workSheet.GetRow(row.RowNum + wbReader.HeaderRows);
+                row = row.RowBelow(wbReader.HeaderRows);
 
             while (wbReader.IsReadableRow(row))
             {
@@ -60,8 +60,8 @@ namespace ExcelEntityMapper.Impl
                 {
                     TSource current = wbReader.ReadInstance(row);
                     if (current != null)
-                        buffer.Add(row.RowNum, current);
-                    row = workSheet.GetRow(row.RowNum + 1);
+                        buffer.Add(row.RowNumber() + 1, current);    //buffer.Add(row.RowNum, current);
+                    row = row.RowBelow();   //row = workSheet.GetRow(row.RowNum + 1);
                 }
                 catch
                 {
@@ -89,7 +89,7 @@ namespace ExcelEntityMapper.Impl
                 throw new WrongParameterException(string.Format("The index row must be greater than zero, value: {0}", indexRow), "indexRow");
 
             IRow row = wbReader.GetWorkSheet(sheetName)
-                                .GetRow(indexRow);
+                                .Row(indexRow);  //.GetRow(indexRow);
 
             return wbReader.IsReadableRow(row) ? wbReader.ReadInstance(row) : null;
         }
@@ -118,12 +118,13 @@ namespace ExcelEntityMapper.Impl
                         {
                             try
                             {
-                                ICell cell = row.GetCell(parameter.ColumnIndex - wbReader.Offset);
-                                if (cell != null)
-                                {
-                                    string cellValue = cell.CellType == CellType.NUMERIC ? cell.NumericCellValue.ToString(CultureInfo.InvariantCulture) : cell.StringCellValue;
-                                    parameter.ToPropertyFormat(instance, cellValue);
-                                }
+                                ICell cell = row.Cell(parameter.ColumnIndex - wbReader.Offset);  //row.GetCell(parameter.ColumnIndex - wbReader.Offset);
+                                //if (cell != null)
+                                //{
+                                //    string cellValue = cell.CellType == CellType.NUMERIC ? cell.NumericCellValue.ToString(CultureInfo.InvariantCulture) : cell.StringCellValue;
+                                //    parameter.ToPropertyFormat(instance, cellValue);
+                                //}
+                                parameter.ToPropertyFormat(instance, cell.GetString());
                             }
                             catch
                             {
@@ -176,8 +177,10 @@ namespace ExcelEntityMapper.Impl
             if ((rowIndex -= wbWriter.Offset) < 0)
                 throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
 
-            ISheet sheet = wbWriter.GetWorkSheet(sheetName);
-            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+            //ISheet sheet = wbWriter.GetWorkSheet(sheetName);
+            //IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+            IRow row = wbWriter.GetWorkSheet(sheetName)
+                               .Row(rowIndex);
 
             if (wbWriter.WriteInstance(row, instance))
                 return ++rowIndex;
@@ -209,19 +212,17 @@ namespace ExcelEntityMapper.Impl
                 {
                     if (wbWriter.HasHeader)
                     {
-                        rowIndex ++;
-                        wbWriter.WriteHeader(rowIndex, workSheet);
+                        wbWriter.WriteHeader(++rowIndex, workSheet);
                     }
                 }
                 else
                 {
-                    rowIndex = lastRow.RowNum;
+                    rowIndex = lastRow.RowNumber();  //rowIndex = lastRow.RowNum;
                 }
 
                 foreach (var current in instances)
                 {
-                    rowIndex++;
-                    IRow row = workSheet.GetRow(rowIndex) ?? workSheet.CreateRow(rowIndex);
+                    IRow row = workSheet.Row(++rowIndex);
                     if (wbWriter.WriteInstance(row, current))
                         counter++;
                     else
@@ -238,23 +239,25 @@ namespace ExcelEntityMapper.Impl
         /// <param name="wbWriter"></param>
         /// <param name="rowIndex"></param>
         /// <param name="sheetName"></param>
-        internal static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, int rowIndex, string sheetName)
+        internal static void WriteHeader<TSource>(this IXWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                  int rowIndex)
             where TSource : class
         {
             if ((rowIndex -= wbWriter.Offset) < 0)
                 throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
 
             ISheet sheet = wbWriter.GetWorkSheet(sheetName);
-            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+            IRow row = sheet.Row(rowIndex); //sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
 
             wbWriter.PropertyMappers.All
                 (
-                    delegate(IXLPropertyMapper<TSource> parameter)
-                    {
-                        row.CreateCell(parameter.ColumnIndex - wbWriter.Offset)
-                            .SetCellValue(parameter.ColumnHeader);
-                        return true;
-                    }
+                    parameter =>
+                        {
+                            //row.CreateCell(parameter.ColumnIndex - wbWriter.Offset)
+                            //   .SetCellValue(parameter.ColumnHeader);
+                            row.Cell(parameter.ColumnIndex - wbWriter.Offset).SetCellValue(parameter.ColumnHeader);
+                            return true;
+                        }
                 );
         }
 
@@ -269,21 +272,31 @@ namespace ExcelEntityMapper.Impl
                                                  ISheet sheet)
             where TSource : class
         {
-            int index = rowBase;
-            var row = sheet.GetRow(index);
-            if (row == null)
-            {
-                row = sheet.CreateRow(index);
-                wbWriter.PropertyMappers.All
+            //int index = rowBase;
+            //var row = sheet.GetRow(index);
+            //if (row == null)
+            //{
+            //    row = sheet.CreateRow(index);
+            //    wbWriter.PropertyMappers.All
+            //    (
+            //        parameter =>
+            //            {
+            //                row.CreateCell(parameter.ColumnIndex - wbWriter.Offset)
+            //                   .SetCellValue(parameter.ColumnHeader);
+            //                return true;
+            //            }
+            //        );
+            //}
+
+            var row = sheet.Row(rowBase);
+            wbWriter.PropertyMappers.All
                 (
-                    delegate(IXLPropertyMapper<TSource> parameter)
+                    parameter =>
                     {
-                        row.CreateCell(parameter.ColumnIndex - wbWriter.Offset)
-                            .SetCellValue(parameter.ColumnHeader);
+                        row.Cell(parameter.ColumnIndex - wbWriter.Offset).SetCellValue(parameter.ColumnHeader);
                         return true;
                     }
                 );
-            }
         }
 
         /// <summary>
@@ -311,7 +324,12 @@ namespace ExcelEntityMapper.Impl
                     {
                         try
                         {
-                            ICell cell = row.CreateCell(parameter.ColumnIndex - wbWriter.Offset);
+                            /*
+                            IXLCell cell = row.Cell(parameter.ColumnIndex);
+                            cell.Value = parameter.ToExcelFormat(instance);
+                            */
+
+                            ICell cell = row.Cell(parameter.ColumnIndex - wbWriter.Offset);   //row.CreateCell(parameter.ColumnIndex - wbWriter.Offset);
                             object val = XLEntityHelper.NormalizeXlsCellValue(parameter.ToExcelFormat(instance));
                             object[] parameters = { val };
 
@@ -357,10 +375,10 @@ namespace ExcelEntityMapper.Impl
                 return -1;
 
             if (!wbProvider.HasHeader)
-                return row.RowNum + wbProvider.Offset;
+                return row.RowNumber() + wbProvider.Offset;
 
-            row = workSheet.GetRow(row.RowNum + wbProvider.HeaderRows);
-            return wbProvider.IsReadableRow(row) ? row.RowNum + wbProvider.Offset : -1;
+            row = row.RowBelow(wbProvider.HeaderRows);
+            return wbProvider.IsReadableRow(row) ? row.RowNumber() + wbProvider.Offset : -1;
         }
 
         /// <summary>
@@ -411,13 +429,12 @@ namespace ExcelEntityMapper.Impl
                         if (cell == null)
                             return false;
 
-                        object objValue = cell.CellType == CellType.NUMERIC
-                                              ? cell.NumericCellValue as object
-                                              : cell.StringCellValue;
+                        //object objValue = cell.CellType == CellType.NUMERIC
+                        //                      ? cell.NumericCellValue as object
+                        //                      : cell.StringCellValue;
 
-                        return objValue != null;
-                        //return cell.CellType == CellType.NUMERIC ? cell.NumericCellValue
-                        //return !string.IsNullOrEmpty(cell.StringCellValue);
+                        //return objValue != null;
+                        return !cell.IsEmpty();
                     }
                 );
         }
@@ -520,7 +537,6 @@ namespace ExcelEntityMapper.Impl
         #endregion
 
 
-
         #region XML sheet implementation
 
         #region Reader methods
@@ -532,7 +548,8 @@ namespace ExcelEntityMapper.Impl
         /// <param name="sheetName"></param>
         /// <param name="buffer"></param>
         /// <returns></returns>
-        internal static int ReadObjects<TSource>(this IXLWorkBookReader<TSource> wbReader, string sheetName, IDictionary<int, TSource> buffer)
+        internal static int ReadObjects<TSource>(this IXLWorkBookReader<TSource> wbReader, string sheetName,
+                                                 IDictionary<int, TSource> buffer)
             where TSource : class, new()
         {
 
@@ -661,7 +678,7 @@ namespace ExcelEntityMapper.Impl
                 throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
 
             IXLRow row = wbWriter.GetWorkSheet(sheetName)
-                                             .Row(rowIndex);
+                                 .Row(rowIndex);
 
             if (wbWriter.WriteInstance(row, instance))
                 return ++rowIndex;
@@ -693,8 +710,7 @@ namespace ExcelEntityMapper.Impl
                 {
                     if (wbWriter.HasHeader)
                     {
-                        rowIndex++;
-                        wbWriter.WriteHeader(rowIndex, workSheet);
+                        wbWriter.WriteHeader(++rowIndex, workSheet);
                     }
                 }
                 else
@@ -719,6 +735,33 @@ namespace ExcelEntityMapper.Impl
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
         /// <param name="wbWriter"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="sheetName"></param>
+        internal static void WriteHeader<TSource>(this IXLWorkBookWriter<TSource> wbWriter, string sheetName,
+                                                  int rowIndex)
+            where TSource : class
+        {
+            if ((rowIndex -= wbWriter.Offset) < 0)
+                throw new WrongParameterException("The rowIndex parameters must be greater than zero in order to write data source into worksheet.", "rowIndex");
+
+            IXLWorksheet sheet = wbWriter.GetWorkSheet(sheetName);
+            IXLRow row = sheet.Row(rowIndex);
+
+            wbWriter.PropertyMappers.All
+                (
+                    parameter =>
+                    {
+                        row.Cell(parameter.ColumnIndex).Value = parameter.ColumnHeader;
+                        return true;
+                    }
+                );
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="wbWriter"></param>
         /// <param name="rowBase"></param>
         /// <param name="sheet"></param>
         private static void WriteHeader<TSource>(this IXLWorkBookWriter<TSource> wbWriter, int rowBase,
@@ -726,7 +769,6 @@ namespace ExcelEntityMapper.Impl
             where TSource : class
         {
             var row = sheet.Row(rowBase);
-
             wbWriter.PropertyMappers.All
                 (
                     parameter =>
@@ -956,6 +998,7 @@ namespace ExcelEntityMapper.Impl
 
         #endregion
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -988,6 +1031,8 @@ namespace ExcelEntityMapper.Impl
             return count;
         }
 
+
+        #region SheetWorker extension factories.
         /// <summary>
         /// 
         /// </summary>
@@ -1058,5 +1103,7 @@ namespace ExcelEntityMapper.Impl
         {
             return new XSheetWriter<TSource>(sheetWorker.HeaderRows, sheetWorker.PropertyMappers);
         }
+        #endregion
+
     }
 }

@@ -83,6 +83,9 @@
     <Compile Include="..\ExcelEntityMapper\FactoryMapper.cs">
       <Link>FactoryMapper.cs</Link>
     </Compile>
+    <Compile Include="..\ExcelEntityMapper\Impl\BIFF\BiffExtensions.cs">
+      <Link>Impl\BIFF\BiffExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ExcelEntityMapper\Impl\BIFF\IBiffWorkBook.cs">
       <Link>Impl\BIFF\IBiffWorkBook.cs</Link>
     </Compile>

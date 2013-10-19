@@ -122,8 +122,11 @@ namespace ExcelEntityMapper.Impl
         /// <returns></returns>
         public abstract int WriteObjects(string sheetName, IEnumerable<TSource> instances);
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
         public abstract void WriteHeader(string sheetName, int rowIndex);
 
         /// <summary>

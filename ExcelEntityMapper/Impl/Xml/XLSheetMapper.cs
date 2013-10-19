@@ -122,12 +122,14 @@ namespace ExcelEntityMapper.Impl.Xml
             return this.WriteObjects<TSource>(sheetName, instances);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
         public override void WriteHeader(string sheetName, int rowIndex)
         {
-            throw new NotImplementedException();
+            this.WriteHeader<TSource>(sheetName, rowIndex);
         }
-
-
     }
 }

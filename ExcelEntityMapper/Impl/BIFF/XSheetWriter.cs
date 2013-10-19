@@ -83,10 +83,14 @@ namespace ExcelEntityMapper.Impl.BIFF
             return this.WriteObjects<TSource>(sheetName, instances);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <param name="rowIndex"></param>
         public override void WriteHeader(string sheetName, int rowIndex)
         {
-            this.WriteHeader(rowIndex, sheetName);
+            this.WriteHeader<TSource>(sheetName, rowIndex);
         }
 
         /// <summary>
