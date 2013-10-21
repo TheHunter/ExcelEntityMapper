@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using ExcelEntityMapper;
@@ -139,6 +140,29 @@ namespace ExcelEntityMapperTest
             MemoryStream mem = new MemoryStream();
             a.Write(mem);
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out3_.xls"), mem);
+        }
+
+        [Test]
+        [Category("Demo")]
+        public void Test4()
+        {
+            HSSFWorkbook a = new HSSFWorkbook(new MemoryStream(this.resource));
+            var sheet = a.CreateSheet("test");
+
+            var row0 = sheet.CreateRow(1);
+            ICell cell1 = row0.CreateCell(0);
+            ICell cell2 = row0.CreateCell(1);
+
+            ParameterExpression instanceInvoker = Expression.Parameter(typeof(ICell), "cell");
+            ParameterExpression parameter1 = Expression.Parameter(typeof(double), "value");
+            MethodInfo method = typeof(ICell).GetMethod("SetCellValue", new[] { typeof(double) });
+
+            Delegate act = Expression.Lambda<Action<ICell, double>>
+                                            (Expression.Call(instanceInvoker, method, parameter1), instanceInvoker, parameter1).Compile();
+            //act.Invoke(cell1, 5);
+            act.DynamicInvoke(cell1, 5);
+            
+            Assert.AreEqual(cell1.NumericCellValue, 5);
         }
 
         //[Test]

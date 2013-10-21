@@ -67,6 +67,7 @@
     <Compile Include="Exceptions\WrongParameterException.cs" />
     <Compile Include="FactoryMapper.cs" />
     <Compile Include="Impl\BIFF\BiffExtensions.cs" />
+    <Compile Include="Impl\BIFF\BiffMapperImplementor.cs" />
     <Compile Include="Impl\BIFF\IBiffWorkBook.cs" />
     <Compile Include="Impl\BIFF\XSheetReader.cs" />
     <Compile Include="Impl\BIFF\XSheetWriter.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Impl\BIFF\XSheetFilteredMapper.cs" />
     <Compile Include="Impl\BIFF\XSheetMapper.cs" />
     <Compile Include="Impl\Xml\XLSheetReader.cs" />
+    <Compile Include="Impl\Xml\XmlMapperImplementor.cs" />
     <Compile Include="IXLProperty.cs" />
     <Compile Include="IXLPropertyReader.cs" />
     <Compile Include="IXLPropertyWriter.cs" />

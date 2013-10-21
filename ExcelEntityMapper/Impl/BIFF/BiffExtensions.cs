@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using NPOI.SS.UserModel;
 
@@ -9,6 +11,39 @@ namespace ExcelEntityMapper.Impl.BIFF
 {
     internal static class BiffExtensions
     {
+        private static readonly Delegate numericDelegate;
+        private static readonly Delegate stringDelegate;
+
+
+        static BiffExtensions()
+        {
+            Type type = typeof (ICell);
+
+            ParameterExpression instanceInvoker = Expression.Parameter(typeof(ICell), "cell");
+            ParameterExpression numericParameter = Expression.Parameter(typeof(double), "value");
+            MethodInfo stringMethod = type.GetMethod("SetCellValue", new[] { typeof(string) });
+
+            ParameterExpression stringParameter = Expression.Parameter(typeof(string), "value");
+            MethodInfo numericMethod = type.GetMethod("SetCellValue", new[] { typeof(double) });
+            
+
+            numericDelegate = Expression.Lambda<Action<ICell, double>>
+                                            (
+                                                Expression.Call(instanceInvoker, numericMethod, numericParameter),
+                                                instanceInvoker,
+                                                numericParameter
+                                            )
+                                            .Compile();
+
+            stringDelegate = Expression.Lambda<Action<ICell, string>>
+                                            (
+                                                Expression.Call(instanceInvoker, stringMethod, stringParameter),
+                                                instanceInvoker,
+                                                stringParameter
+                                            )
+                                            .Compile();
+        }
+
         #region IRow extension
         /// <summary>
         /// 
@@ -85,6 +120,15 @@ namespace ExcelEntityMapper.Impl.BIFF
                     return false;
             }
         }
+
+        internal static void SetCellValue(this ICell cell, object value)
+        {
+            if (XLEntityHelper.IsNumericValue(value))
+                numericDelegate.DynamicInvoke(cell, value);
+            else
+                stringDelegate.DynamicInvoke(cell, value);
+        }
+
         #endregion
     }
 }
