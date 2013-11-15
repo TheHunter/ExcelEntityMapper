@@ -78,7 +78,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out2_.xls"), mem);
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test3()
         {
@@ -142,7 +142,7 @@ namespace ExcelEntityMapperTest
             WriteFileFromStream(Path.Combine(this.outputPath, "test_out3_.xls"), mem);
         }
 
-        [Test]
+        //[Test]
         [Category("Demo")]
         public void Test4()
         {
